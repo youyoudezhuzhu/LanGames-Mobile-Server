@@ -1,6 +1,69 @@
 (() => {
   "use strict";
 
+  /* ═══ 自适应布局（手机横屏）═══
+     原理：JS 实时读取视口尺寸，把垂直空间按优先级比例分配
+     （顶部对手区 → 中间出牌区 → 提示+按钮 → 手牌区），
+     写入 CSS 变量，CSS 全部引用变量，任何分辨率都不重叠。 */
+  function layoutAdaptive() {
+    const root = document.documentElement;
+    const isLandscapeMobile = matchMedia("(orientation: landscape) and (max-height: 560px)").matches;
+    if (!isLandscapeMobile) return;
+    const vh = window.innerHeight;
+    const compact = vh <= 330;
+    // 顶部对手区（头像+卡背）底部
+    const topBottom = compact ? 72 : Math.round(Math.max(84, vh * 0.245));
+    // 手牌区高度：视口比例，限幅
+    const handH = compact ? 72 : Math.round(Math.min(112, Math.max(78, vh * 0.28)));
+    // 底部区：手牌 + 间隙 + 按钮 + 提示间距 + 提示文字
+    const btnH = compact ? 34 : 38;
+    const tipH = compact ? 0 : 18;
+    const gap = compact ? 6 : 8;
+    const bottomArea = handH + 4 + gap + btnH + gap + tipH;
+    // 中间出牌区
+    const mid = vh - topBottom - bottomArea;
+    const trickH = Math.round(Math.min(132, Math.max(compact ? 70 : 84, mid * 0.92)));
+    const trickTop = Math.round(topBottom + Math.max(4, (mid - trickH) / 2));
+    // 卡片尺寸微调：视口越矮牌越小
+    const cardAdj = Math.round((vh - (compact ? 300 : 340)) / 12);
+    root.style.setProperty("--trick-top", trickTop + "px");
+    root.style.setProperty("--trick-h", trickH + "px");
+    root.style.setProperty("--btn-bottom", (handH + 4 + 8) + "px");
+    root.style.setProperty("--hand-h", handH + "px");
+    root.style.setProperty("--card-size-adjust", cardAdj + "px");
+    // 兜底修正：渲染后实测出牌区是否压到提示文字，压到则上移
+    requestAnimationFrame(() => {
+      const trick = document.querySelector(".trick-zone");
+      const tip = document.querySelector("#selection-tip");
+      if (!trick || !tip) return;
+      if (getComputedStyle(tip).display === "none") return; // 极矮屏隐藏提示时无需修正
+      const overlap = Math.round(trick.getBoundingClientRect().bottom - tip.getBoundingClientRect().top + 6);
+      if (overlap > 0) {
+        const current = parseFloat(root.style.getPropertyValue("--trick-top")) || trickTop;
+        root.style.setProperty("--trick-top", Math.max(topBottom - 14, current - overlap) + "px");
+      }
+    });
+  }
+  let layoutTimer = null;
+  function requestLayout() {
+    clearTimeout(layoutTimer);
+    layoutTimer = setTimeout(layoutAdaptive, 80);
+  }
+  /* 出牌区内容变化（出牌/过牌）时自动重排，防止内容变高压到按钮/提示 */
+  function watchTrickZone() {
+    const trick = document.querySelector(".trick-zone");
+    if (!trick) return;
+    new MutationObserver(() => {
+      if (matchMedia("(orientation: landscape) and (max-height: 560px)").matches) requestLayout();
+    }).observe(trick, { childList: true, subtree: true, characterData: true });
+  }
+  window.addEventListener("resize", requestLayout);
+  window.addEventListener("orientationchange", () => setTimeout(layoutAdaptive, 250));
+  window.addEventListener("load", () => {
+    setTimeout(layoutAdaptive, 100);
+    watchTrickZone();
+  });
+
   const SUITS = ["♠", "♥", "♣", "♦"];
   const RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
   const DEFAULT_NAMES = ["牌手", "周舟", "林默", "许晏"];
@@ -348,6 +411,51 @@
     state.hands[player] = state.hands[player].filter(c => !ids.has(c.id));
   }
 
+  function removeCard(player, cardId) {
+    state.hands[player] = state.hands[player].filter(c => c.id !== cardId);
+  }
+
+  function cardText(card) {
+    if (card.joker) return card.big ? "大王" : "小王";
+    return `${card.suit}${card.rank}`;
+  }
+
+  /* ═══ 进贡 / 还贡 / 抗贡（上一局结束后，下一局发牌完自动执行）═══ */
+  function performTribute(prevOrder) {
+    if (state.round <= 1 || !prevOrder || prevOrder.length < 4) return;
+    const leader = prevOrder[0];
+    const last = prevOrder[3];
+    // 抗贡：末游抓到两张大王，免进贡并由末游先出
+    const bigJokers = state.hands[last].filter(c => c.joker && c.big);
+    if (bigJokers.length >= 2) {
+      state.dealer = last;
+      showToast(`${NAMES[last]} 抓到两张大王，抗贡！由 ${NAMES[last]} 先出牌`, "success");
+      return;
+    }
+    // 进贡牌：末游手中除红桃级牌外最大的一张（包含大小王）
+    const eligible = state.hands[last].filter(c => !(c.suit === "♥" && c.rank === state.level));
+    if (!eligible.length) {
+      state.dealer = leader;
+      return;
+    }
+    const tribute = eligible.reduce((a, b) => rankValue(b.rank) > rankValue(a.rank) ? b : a);
+    removeCard(last, tribute.id);
+    state.hands[leader].push(tribute);
+    // 还贡：头游还一张 10 及以下的牌（自动选最小；没有则跳过）
+    const repayable = state.hands[leader].filter(c => !c.joker && naturalValue(c.rank) <= 10);
+    let repay = null;
+    if (repayable.length) {
+      repay = repayable.reduce((a, b) => naturalValue(b.rank) < naturalValue(a.rank) ? b : a);
+      removeCard(leader, repay.id);
+      state.hands[last].push(repay);
+    }
+    state.hands.forEach(sortHand);
+    state.dealer = leader;
+    const message = `${NAMES[last]} 向 ${NAMES[leader]} 进贡 ${cardText(tribute)}` +
+      (repay ? `，${NAMES[leader]} 还 ${cardText(repay)}` : "");
+    showToast(message, "info");
+  }
+
   function commitPlay(player, cards, combo) {
     removeCards(player, cards);
     state.currentPlay = { cards: [...cards], combo };
@@ -368,7 +476,7 @@
     if (roundComplete(state.finishOrder)) {
       let next = fromPlayer;
       while (state.finishOrder.length < 4) {
-        next = (next + 1) % 4;
+        next = (next + 3) % 4;
         if (!state.finishOrder.includes(next)) state.finishOrder.push(next);
       }
       endGame();
@@ -382,8 +490,8 @@
   }
 
   function nextActive(from) {
-    let next = (from + 1) % 4;
-    while (state.finishOrder.includes(next)) next = (next + 1) % 4;
+    let next = (from + 3) % 4;
+    while (state.finishOrder.includes(next)) next = (next + 3) % 4;
     return next;
   }
 
@@ -636,6 +744,10 @@
     state.hands = [[], [], [], []];
     deck.forEach((card, index) => state.hands[index % 4].push(card));
     state.hands.forEach(sortHand);
+    // 上一局结束 → 下一局发牌后自动进贡/还贡/抗贡（需在 finishOrder 清空前读取）
+    const prevOrder = state.finishOrder.length === 4 ? [...state.finishOrder] : null;
+    state.finishOrder = [];
+    if (prevOrder) performTribute(prevOrder);
     state.currentPlayer = state.dealer;
     state.currentPlay = null;
     state.lastPlayer = null;
@@ -1031,6 +1143,28 @@
       syncAudioButtons();
       showToast(message, state.music ? "success" : message.includes("不支持") ? "error" : "info");
     });
+    /* 手机横屏悬浮菜单：点「菜单」展开/收起下拉面板 */
+    const menuButton = document.getElementById("game-menu-button");
+    const headerActions = document.getElementById("header-actions");
+    if (menuButton && headerActions) {
+      const closeMenu = () => {
+        headerActions.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+      };
+      menuButton.addEventListener("click", event => {
+        event.stopPropagation();
+        const open = headerActions.classList.toggle("open");
+        menuButton.setAttribute("aria-expanded", String(open));
+      });
+      headerActions.addEventListener("click", event => {
+        if (event.target.closest("button")) closeMenu();
+      });
+      document.addEventListener("click", event => {
+        if (headerActions.classList.contains("open") &&
+            !event.target.closest("#game-menu-button") &&
+            !event.target.closest("#header-actions")) closeMenu();
+      });
+    }
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         pauseAI();
