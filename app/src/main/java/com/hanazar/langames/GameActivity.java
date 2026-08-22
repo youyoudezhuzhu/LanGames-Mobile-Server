@@ -78,6 +78,36 @@ public class GameActivity extends Activity {
     private View customView;
     private WebChromeClient.CustomViewCallback customViewCallback;
 
+    /**
+     * 手机横屏适配层：自动读取 devicePixelRatio / 视口 / 方向，注入：
+     *  - :root CSS 变量 --dpr / --vw / --vh / --aspect（页面可据此做弹性布局）
+     *  - <html data-orientation="landscape|portrait"> 方向类
+     *  - 以 360 CSS 宽为基准的弹性 rem（--mobile-font-size），供 rem/em 排版随物理 DPI 缩放
+     * 仅设变量与类，不强制改布局，避免破坏各游戏原有排版。
+     */
+    private static final String MOBILE_FIT_JS =
+        "(function(){" +
+        "  function fit(){" +
+        "    var dpr = window.devicePixelRatio || 1;" +
+        "    var vv = window.visualViewport;" +
+        "    var w = vv ? vv.width : window.innerWidth;" +
+        "    var h = vv ? vv.height : window.innerHeight;" +
+        "    var orient = (w >= h) ? 'landscape' : 'portrait';" +
+        "    var doc = document.documentElement;" +
+        "    doc.style.setProperty('--dpr', String(dpr));" +
+        "    doc.style.setProperty('--vw', w + 'px');" +
+        "    doc.style.setProperty('--vh', h + 'px');" +
+        "    doc.style.setProperty('--aspect', String((Math.min(w,h) / Math.max(w,h)).toFixed(4)));" +
+        "    doc.setAttribute('data-orientation', orient);" +
+        "    doc.style.setProperty('--mobile-font-size', Math.round((Math.max(w,h) / 360) * 100) / 100 + 'px');" +
+        "    if(!document.getElementById('mobile-fit-meta')){var m=document.createElement('style');m.id='mobile-fit-meta';m.textContent='html[data-orientation=landscape]{height:100%;}';" +
+        "      (document.head||document.documentElement).appendChild(m);}" +
+        "  }" +
+        "  fit();" +
+        "  window.addEventListener('resize', fit);" +
+        "  window.addEventListener('orientationchange', function(){ setTimeout(fit, 80); });" +
+        "})();";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,11 +137,22 @@ public class GameActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
-        settings.setLoadWithOverviewMode(true);
+        // 视口：遵循 viewport meta 的 width=device-width，用真实 CSS 视口渲染
         settings.setUseWideViewPort(true);
+        // 不要"总览缩放"（否则高分辨率手机上页面被缩小、布局错位）
+        settings.setLoadWithOverviewMode(false);
+        settings.setSupportZoom(false);
+        settings.setBuiltInZoomControls(false);
+        settings.setTextZoom(100);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(android.webkit.WebView view, String url) {
+                super.onPageFinished(view, url);
+                view.evaluateJavascript(MOBILE_FIT_JS, null);
+            }
+        });
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onShowCustomView(View view, CustomViewCallback callback) {

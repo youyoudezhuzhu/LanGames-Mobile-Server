@@ -17,3 +17,6 @@ app/libnode/include/**
 # 其他
 *.log
 .DS_Store
+
+# 本地 APK 产物不入库（由 GitHub Actions 出包）
+release/*.apk
