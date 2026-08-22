@@ -34,6 +34,13 @@
       "port": 4176,
       "engine": "webrtc",
       "servedStaticDir": "games/mahjong"
+    },
+    "billiards": {
+      "id": "billiards",
+      "name": "3D 台球",
+      "port": 3001,
+      "engine": "websocket",
+      "servedStaticDir": "games/billiards"
     }
   }
 }
