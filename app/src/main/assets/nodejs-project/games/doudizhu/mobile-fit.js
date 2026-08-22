@@ -43,12 +43,7 @@
     doc.style.setProperty("--aspect", d.aspect);
     doc.setAttribute("data-orientation", d.orient);
 
-    // 弹性 rem：横屏以较长边为基准，360 CSS 宽 => 1rem
-    var base = Math.max(d.w, d.h) / 360;
-    doc.style.setProperty("--fit-rem", base.toFixed(3) + "rem");
-    doc.style.fontSize = "calc(100% * " + base.toFixed(3) + ")";
-
-    // 可选：贴合视口（只缩不放）
+    // 只在内容超出视口时用 zoom 缩放到贴合（只缩不放、保持比例），避免把 rem/em 游戏放大
     if (doc.getAttribute("data-mobile-fit") === "fit") {
       var nw = Math.max(doc.scrollWidth, document.body ? document.body.scrollWidth : 0);
       var nh = Math.max(doc.scrollHeight, document.body ? document.body.scrollHeight : 0);
