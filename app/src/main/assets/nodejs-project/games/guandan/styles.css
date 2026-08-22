@@ -642,3 +642,6 @@ body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after
   .game-shell { grid-template-rows: 52px minmax(0, 1fr) 0px !important; min-height: 100vh !important; }
   .table-wrap { min-height: 0 !important; }
 }
+
+/* ===== 让底部空区融入游戏深色背景（避免刺眼纯黑边） ===== */
+html,body{ background:#071b17 !important; }
