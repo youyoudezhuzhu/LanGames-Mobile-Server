@@ -543,8 +543,21 @@ body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after
   /* 顶栏与页脚不再占 grid 行：悬浮在画面角落。
      注意：topbar/footer 用 fixed 脱离文档流后，grid 里只剩 table-wrap 一个 item，
      会被自动放进第一行（0px）导致高度塌陷，所以横屏必须改用 block + 绝对定位撑满。 */
-  .game-shell { position:relative; display:block; height:100dvh; }
+  .game-shell { position:relative; display:block; height:100vh; height:100dvh; }
   .table-wrap { position:absolute; inset:0; min-height:0; }
+
+  /* ── 首页横屏：撑满视口，内容缩放适配 ── */
+  .home-screen { min-height:100vh; min-height:100dvh; grid-template-rows:56px 1fr 20px; }
+  .home-nav { padding:0 20px; }
+  .home-nav .brand h1 { font-size:16px; }
+  .hero-panel { width:min(1000px,calc(100vw - 40px)); grid-template-columns:minmax(0,1.3fr) minmax(230px,.7fr); gap:32px; padding:18px 0; }
+  .hero-copy h2 { font-size:clamp(24px,4.2vw,44px); }
+  .hero-description { margin:12px 0 18px; font-size:11px; }
+  .home-actions { max-width:520px; gap:8px; }
+  .home-primary,.home-secondary { min-height:62px; padding:9px 14px; }
+  .announcement-card { padding:16px; font-size:11px; }
+  .announcement-icon { width:40px; height:40px; margin:14px 0 10px; font-size:17px; }
+  .floating-card { display:none; }
 
   /* ── 悬浮菜单：左上角 ── */
   .topbar {
@@ -627,21 +640,8 @@ body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after
   .selection-tip { display:none; }
 }
 
-/* ===== 手机横屏：去掉牌桌固定最小高度，铺满视口 ===== */
-@media (orientation: landscape) and (max-height: 520px) {
-  .game-shell { grid-template-rows: 56px minmax(0, 1fr) 24px !important; min-height: 100vh !important; }
-  .table-wrap { min-height: 0 !important; }
-  .game-footer { font-size: 10px; }
-  .hand-scroll { height: calc(96px + var(--hand-top-room)); }
-  .hand { height: calc(86px + var(--hand-top-room)); }
-}
-
-/* ===== 手机横屏：去掉底部版本号，牌桌铺满视口 ===== */
-@media (orientation: landscape) and (max-height: 560px) {
-  .game-footer { display: none !important; }
-  .game-shell { grid-template-rows: 52px minmax(0, 1fr) 0px !important; min-height: 100vh !important; }
-  .table-wrap { min-height: 0 !important; }
-}
+/* ===== 手机横屏：规则已统一在上方 @media(landscape+coarse+max-height:560px) 块处理。
+   不再使用 min-height:100vh !important 覆盖 height:100dvh，避免撑满失效导致下半部分黑屏。 ===== */
 
 /* ===== 让底部空区融入游戏深色背景（避免刺眼纯黑边） ===== */
 html,body{ background:#071b17 !important; }
