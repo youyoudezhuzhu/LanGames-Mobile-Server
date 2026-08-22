@@ -45,8 +45,8 @@ jobs:
 
       - name: Sign release APK
         run: |
-          keytool -genkeypair -v -keystore release.keystore -alias guandan -keyalg RSA -keysize 2048 -validity 10000 \
-            -storepass PASSWORD -keypass PASSWORD -dname "CN=Guandan Server, OU=Hanazar, O=Hanazar Games, L=NA, S=NA, C=CN" > /dev/null 2>&1
+          keytool -genkeypair -v -keystore release.keystore -alias langames -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass PASSWORD -keypass PASSWORD -dname "CN=LanGames Server, OU=Hanazar, O=Hanazar Games, L=NA, S=NA, C=CN" > /dev/null 2>&1
           APKSIGNER=$(ls $ANDROID_HOME/build-tools/*/apksigner | tail -1)
           $APKSIGNER sign --ks release.keystore --ks-pass pass:PASSWORD --key-pass pass:PASSWORD \
             --out app/build/outputs/apk/release/signed.apk app/build/outputs/apk/release/*-unsigned.apk

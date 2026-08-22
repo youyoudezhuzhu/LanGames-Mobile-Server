@@ -20,16 +20,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * 前台服务：把 assets/nodejs-project 复制到 filesDir，
- * 然后启动嵌入的 Node.js 运行时运行 lan-server.cjs（局域网服务器）。
+ * 前台服务：把 assets/nodejs-project（含各游戏目录 + host.js + 通用静态服务器）
+ * 复制到 filesDir，然后启动嵌入的 Node.js 运行时运行 host.js。
+ * host.js 会一次性把所有已注册游戏服务器拉起（nodejs-mobile 进程内仅能启动一次 Node），
+ * 并额外在 CATALOG_PORT 提供 GET /api/catalog 目录接口（供启动页列出可用的游戏与地址）。
  */
 public class NodeService extends Service {
     private static final String TAG = "LanGamesServer";
     private static final String CHANNEL_ID = "langames_server";
     private static final int NOTIF_ID = 1;
-    public static final int PORT = 4173;
 
-    // 加载 JNI 桥接库与 node 运行时
+    /** host.js 上目录接口 /api/catalog 的端口 */
+    public static final int CATALOG_PORT = 4780;
+
     static {
         System.loadLibrary("native-lib");
         System.loadLibrary("node");
@@ -37,8 +40,7 @@ public class NodeService extends Service {
 
     public static native int startNodeWithArguments(String[] arguments);
 
-    // 只启动一个 node 实例
-    public static boolean _startedNodeAlready = false;
+    private static boolean _startedNodeAlready = false;
 
     @Override
     public void onCreate() {
@@ -59,13 +61,14 @@ public class NodeService extends Service {
                         if (wasAPKUpdated()) {
                             File nodeDirReference = new File(nodeDir);
                             if (nodeDirReference.exists()) {
-                                deleteFolderRecursively(new File(nodeDir));
+                                deleteFolderRecursively(nodeDirReference);
                             }
                             copyAssetFolder(getApplicationContext().getAssets(), "nodejs-project", nodeDir);
                             saveLastUpdateTime();
                         }
-                        Log.i(TAG, "starting node: " + nodeDir + "/lan-server.cjs");
-                        startNodeWithArguments(new String[]{"node", nodeDir + "/lan-server.cjs"});
+                        Log.i(TAG, "starting node host: " + nodeDir + "/host.js");
+                        // host.js 启动全部已注册游戏 + /api/catalog（4780）
+                        startNodeWithArguments(new String[]{"node", nodeDir + "/host.js"});
                     } catch (Throwable t) {
                         Log.e(TAG, "node start failed", t);
                         stopSelf();
@@ -81,7 +84,7 @@ public class NodeService extends Service {
         return null;
     }
 
-    /** 更新前台通知文案（MainActivity 拿到局域网地址后调用） */
+    /** 更新前台通知文案（MainActivity 拿到目录/地址后调用） */
     public static void updateNotification(Context context, String text) {
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm != null) {

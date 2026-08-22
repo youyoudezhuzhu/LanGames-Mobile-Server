@@ -30,7 +30,7 @@
             android:name=".GameActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="unspecified" />
+            android:screenOrientation="landscape" />
 
         <service
             android:name=".NodeService"

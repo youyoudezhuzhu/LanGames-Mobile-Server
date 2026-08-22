@@ -1,0 +1,11 @@
+{
+  "games": {
+    "guandan": {
+      "id": "guandan",
+      "name": "掼蛋",
+      "port": 4173,
+      "engine": "sse",
+      "servedStaticDir": "games/guandan"
+    }
+  }
+}

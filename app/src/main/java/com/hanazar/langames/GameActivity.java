@@ -2,6 +2,7 @@ package com.hanazar.langames;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.LinkAddress;
 import android.net.LinkProperties;
@@ -81,6 +82,16 @@ public class GameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // 强制横屏全屏（游戏手机端适配）
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
         FrameLayout root = new FrameLayout(this);
         setContentView(root);
 
@@ -125,7 +136,12 @@ public class GameActivity extends Activity {
         // 原生 IP 桥：让前端能拿到所有网卡（WiFi/热点/流量）地址
         webView.addJavascriptInterface(new AndroidBridge(this), "AndroidBridge");
 
-        webView.loadUrl("http://127.0.0.1:" + NodeService.PORT + "/");
+        // 加载启动页选中的游戏；若未传 URL，则回落到目录接口
+        String url = getIntent().getStringExtra("url");
+        if (url == null || url.isEmpty()) {
+            url = "http://127.0.0.1:" + NodeService.CATALOG_PORT + "/api/catalog";
+        }
+        webView.loadUrl(url);
     }
 
     private void hideSystemUi(boolean immersive) {

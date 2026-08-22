@@ -218,7 +218,7 @@ function createGameServer(root = __dirname, { disconnectGraceMs = 15000 } = {}) 
 }
 
 if (require.main === module) {
-  const port = Number(process.env.PORT) || 4173;
+  const port = Number(process.argv[2]) || Number(process.env.PORT) || 4173;
   const host = process.env.HOST || "0.0.0.0";
   createGameServer().listen(port, host, () => console.log(`掼蛋服务已启动：http://localhost:${port}`));
 }

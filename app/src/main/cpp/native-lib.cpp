@@ -59,7 +59,7 @@ int start_redirecting_stdout_stderr() {
 
 // node 的 libUV 要求参数在连续内存中
 extern "C" jint JNICALL
-Java_com_hanazar_guandanserver_NodeService_startNodeWithArguments(
+Java_com_hanazar_langames_NodeService_startNodeWithArguments(
         JNIEnv *env,
         jobject /* this */,
         jobjectArray arguments) {
