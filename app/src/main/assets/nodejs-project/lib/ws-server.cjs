@@ -187,6 +187,12 @@ class WebSocket extends EventEmitter {
   }
 }
 
+// ws 包兼容的状态常量
+WebSocket.CONNECTING = 0;
+WebSocket.OPEN = 1;
+WebSocket.CLOSING = 2;
+WebSocket.CLOSED = 3;
+
 class WebSocketServer extends EventEmitter {
   constructor(options) {
     super();
