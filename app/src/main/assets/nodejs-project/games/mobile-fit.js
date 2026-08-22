@@ -43,13 +43,22 @@
     doc.style.setProperty("--aspect", d.aspect);
     doc.setAttribute("data-orientation", d.orient);
 
-    // 只在内容超出视口时用 zoom 缩放到贴合（只缩不放、保持比例），避免把 rem/em 游戏放大
+    // 可选：贴合视口（只缩不放）。若局内游戏界面激活（game-shell 可见），
+    // 由游戏自身布局撑满，跳过缩放，避免把已铺满的牌桌再缩小。
     if (doc.getAttribute("data-mobile-fit") === "fit") {
-      var nw = Math.max(doc.scrollWidth, document.body ? document.body.scrollWidth : 0);
-      var nh = Math.max(doc.scrollHeight, document.body ? document.body.scrollHeight : 0);
-      var scale = Math.min(1, Math.min(d.w / (nw || d.w), d.h / (nh || d.h)));
-      doc.style.zoom = scale.toFixed(4);
-      if (document.body) document.body.style.margin = "0 auto";
+      var gameShell = document.querySelector("[class*='game-shell'], .game-screen, #game-screen, #game");
+      var gameActive = false;
+      if (gameShell) gameActive = gameShell.offsetParent !== null;
+      if (!gameActive) {
+        var nw = Math.max(doc.scrollWidth, document.body ? document.body.scrollWidth : 0);
+        var nh = Math.max(doc.scrollHeight, document.body ? document.body.scrollHeight : 0);
+        var scale = Math.min(1, Math.min(d.w / (nw || d.w), d.h / (nh || d.h)));
+        doc.style.zoom = scale.toFixed(4);
+        if (document.body) document.body.style.margin = "0 auto";
+      } else {
+        doc.style.zoom = "1";
+        if (document.body) document.body.style.margin = "0";
+      }
     }
   }
 
