@@ -24,6 +24,7 @@ const STATIC_FILES = new Map([
   ["/src/guest-profile.js", ["src/guest-profile.js", "text/javascript; charset=utf-8"]],
   ["/src/i18n.js", ["src/i18n.js", "text/javascript; charset=utf-8"]],
   ["/assets/tavern-bg.png", ["assets/tavern-bg.png", "image/png"]],
+  ["/mobile-fit.js", ["mobile-fit.js", "text/javascript; charset=utf-8"]],
 ]);
 
 function roomCode(rooms) {
