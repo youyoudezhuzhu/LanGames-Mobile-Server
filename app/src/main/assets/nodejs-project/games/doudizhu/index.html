@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1a5f2a">
+    <title>斗地主 - 经典棋牌游戏</title>
+    <meta name="description" content="经典三人棋牌斗地主 — 支持人机对战、局域网联机、自定义规则和牌局回放。">
+    <link rel="manifest" href="./assets/manifest-C0GG1HZc.json">
+    <link rel="apple-touch-icon" href="./assets/icon-192-DEfJDJDE.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <script type="module" crossorigin src="./assets/main-BlSk3VQf.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-xN5U9kot.css">
+</head>
+<body data-theme="green">
+    <svg class="svg-sprite" aria-hidden="true" focusable="false">
+        <symbol id="icon-bot" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="14" rx="4"/><path d="M12 2v4M8 12h.01M16 12h.01M9 16h6M2 11h2M20 11h2"/></symbol>
+        <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M8 4h8v4a4 4 0 0 1-8 0V4ZM8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4M12 12v5M8 21h8M9 17h6"/></symbol>
+        <symbol id="icon-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.2 2.5 3.3 5.5 3.3 9S14.2 18.5 12 21c-2.2-2.5-3.3-5.5-3.3-9S9.8 5.5 12 3Z"/></symbol>
+        <symbol id="icon-sliders" viewBox="0 0 24 24"><path d="M4 7h5M15 7h5M4 17h3M13 17h7M9 4v6M7 17h6M13 14v6"/></symbol>
+        <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></symbol>
+        <symbol id="icon-puzzle" viewBox="0 0 24 24"><path d="M14 4a2 2 0 1 0-4 0v2H6v4H4a2 2 0 1 0 0 4h2v4h4v2a2 2 0 1 0 4 0v-2h4v-4h2a2 2 0 1 0 0-4h-2V6h-4V4Z"/></symbol>
+        <symbol id="icon-swords" viewBox="0 0 24 24"><path d="m4 20 6-6M14 10l6-6M16 4h4v4M8 20H4v-4M4 4l16 16M16 20h4v-4M8 4H4v4"/></symbol>
+        <symbol id="icon-video" viewBox="0 0 24 24"><rect x="3" y="5" width="14" height="14" rx="3"/><path d="m17 10 4-2v8l-4-2M8 9l5 3-5 3V9Z"/></symbol>
+        <symbol id="icon-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1 7 4.5-2 4.5 2-1-7M12 6l.8 1.6 1.7.3-1.2 1.3.3 1.8-1.6-.8-1.6.8.3-1.8-1.2-1.3 1.7-.3L12 6Z"/></symbol>
+        <symbol id="icon-target" viewBox="0 0 24 24"><circle cx="11" cy="13" r="8"/><circle cx="11" cy="13" r="4"/><path d="m14 10 7-7M17 3h4v4"/></symbol>
+        <symbol id="icon-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20V7M2 20h21"/></symbol>
+        <symbol id="icon-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M17 9h4M3 15h4M17 15h4"/></symbol>
+        <symbol id="icon-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-1h5v16H7a3 3 0 0 0-3 1V5ZM20 5a3 3 0 0 0-3-1h-5v16h5a3 3 0 0 1 3 1V5Z"/></symbol>
+        <symbol id="icon-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H3v-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6V3h4v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></symbol>
+        <symbol id="icon-scroll" viewBox="0 0 24 24"><path d="M7 4a3 3 0 0 1 3-2h9v16a4 4 0 0 1-4 4H6a3 3 0 0 1-3-3v-1h12v1a3 3 0 0 0 3 3M7 4v14M10 7h6M10 11h6M10 15h4"/></symbol>
+        <symbol id="icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+        <symbol id="icon-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5ZM15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></symbol>
+        <symbol id="icon-volume-off" viewBox="0 0 24 24"><path d="m11 5-5 4H3v6h3l5 4V5ZM16 10l5 5M21 10l-5 5"/></symbol>
+        <symbol id="icon-fullscreen" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></symbol>
+        <symbol id="icon-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></symbol>
+    </svg>
+    <!-- 菜单界面 -->
+    <div id="menu-screen" class="screen">
+        <div class="menu-bg-decoration"></div>
+        <div class="menu-container">
+            <!-- 标题区 -->
+            <header class="menu-header">
+                <div class="menu-title-wrap">
+                    <div class="title-icon title-icon--spade">♠</div>
+                    <h1 class="game-title">斗地主</h1>
+                    <div class="title-icon title-icon--heart">♥</div>
+                </div>
+                <p class="game-subtitle">经典三人棋牌游戏</p>
+                <div class="title-divider"></div>
+            </header>
+
+            <!-- 主体内容 -->
+            <div class="menu-body">
+                <!-- 左侧：游戏模式 -->
+                <div class="menu-left">
+                    <div class="section-label">游戏模式</div>
+                    <div class="mode-cards">
+                        <!-- 主模式 -->
+                        <button id="btn-ai-mode" class="mode-card mode-card--primary">
+                            <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-bot"></use></svg></div>
+                            <div class="mode-card__content">
+                                <div class="mode-card__title">人机对战</div>
+                                <div class="mode-card__desc">挑战 AI，磨练牌技</div>
+                            </div>
+                            <div class="mode-card__arrow"><svg class="ui-icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg></div>
+                        </button>
+
+                        <button id="btn-tournament-mode" class="mode-card mode-card--primary mode-card--tournament">
+                            <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-trophy"></use></svg></div>
+                            <div class="mode-card__content">
+                                <div class="mode-card__title">锦标赛</div>
+                                <div class="mode-card__desc">多轮角逐，争夺冠军</div>
+                            </div>
+                            <div class="mode-card__arrow"><svg class="ui-icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg></div>
+                        </button>
+
+                        <div class="mode-card-row">
+                            <button id="btn-lan-mode" class="mode-card mode-card--secondary">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-globe"></use></svg></div>
+                                <div class="mode-card__content">
+                                    <div class="mode-card__title">局域网联机</div>
+                                    <div class="mode-card__desc">好友同乐</div>
+                                </div>
+                            </button>
+                            <button id="btn-custom-mode" class="mode-card mode-card--secondary">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-sliders"></use></svg></div>
+                                <div class="mode-card__content">
+                                    <div class="mode-card__title">自定义模式</div>
+                                    <div class="mode-card__desc">自由设定</div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <div class="mode-card-row">
+                            <button id="btn-daily-challenge" class="mode-card mode-card--accent">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-calendar"></use></svg></div>
+                                <div class="mode-card__content">
+                                    <div class="mode-card__title">每日挑战</div>
+                                    <div class="mode-card__desc" id="daily-challenge-desc">今日牌局已就绪</div>
+                                </div>
+                                <div class="mode-card__arrow"><svg class="ui-icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg></div>
+                            </button>
+                        </div>
+
+                        <div class="mode-card-row">
+                            <button id="btn-endgame-mode" class="mode-card mode-card--accent">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-puzzle"></use></svg></div>
+                                <div class="mode-card__content">
+                                    <div class="mode-card__title">残局训练</div>
+                                    <div class="mode-card__desc" id="endgame-desc">挑战5个经典残局</div>
+                                </div>
+                                <div class="mode-card__arrow"><svg class="ui-icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg></div>
+                            </button>
+                        </div>
+                        <div class="mode-card-row">
+                            <button id="btn-challenge-mode" class="mode-card mode-card--accent">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-swords"></use></svg></div>
+                                <div class="mode-card__content">
+                                    <div class="mode-card__title">极限挑战</div>
+                                    <div class="mode-card__desc" id="challenge-desc">挑战10个极限规则关卡</div>
+                                </div>
+                                <div class="mode-card__arrow"><svg class="ui-icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg></div>
+                            </button>
+                        </div>
+
+                        <div class="mode-card-row mode-card-row--small">
+                            <button id="btn-replay" class="mode-card mode-card--ghost">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-video"></use></svg></div>
+                                <div class="mode-card__title">牌局回放</div>
+                            </button>
+                            <button id="btn-achievements" class="mode-card mode-card--ghost">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-award"></use></svg></div>
+                                <div class="mode-card__title">成就系统</div>
+                            </button>
+                            <button id="btn-season-quests" class="mode-card mode-card--ghost">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-target"></use></svg></div>
+                                <div class="mode-card__title">赛季任务</div>
+                                <span class="quest-badge hidden" id="season-quest-badge"></span>
+                            </button>
+                            <button id="btn-play-style" class="mode-card mode-card--ghost">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-chart"></use></svg></div>
+                                <div class="mode-card__title">牌风分析</div>
+                            </button>
+                            <button id="btn-workshop" class="mode-card mode-card--ghost">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-film"></use></svg></div>
+                                <div class="mode-card__title">牌谱工坊</div>
+                            </button>
+                            <button id="btn-tutorial" class="mode-card mode-card--ghost">
+                                <div class="mode-card__icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-book"></use></svg></div>
+                                <div class="mode-card__title">新手教程</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：统计面板 -->
+                <div class="menu-right">
+                    <div class="stats-panel-wrap">
+                        <!-- JS 动态插入 .stats-panel -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部：设置 + 公告 + 版本 -->
+            <footer class="menu-footer">
+                <div class="menu-footer-left">
+                    <button id="btn-settings" class="btn-settings-float" aria-label="设置">
+                        <svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg>
+                        <span>设置</span>
+                    </button>
+                    <button id="btn-changelog" class="btn-changelog-float" aria-label="更新日志">
+                        <svg class="ui-icon" aria-hidden="true"><use href="#icon-scroll"></use></svg>
+                        <span>更新</span>
+                    </button>
+                </div>
+                <span class="version-info">v1.2.49</span>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 设置面板（覆盖层） -->
+    <div id="settings-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <div class="settings-modal">
+            <div class="settings-header">
+                <h2 id="settings-title">游戏设置</h2>
+                <button id="btn-close-settings" class="btn-close" aria-label="关闭设置">✕</button>
+            </div>
+            <div class="settings-search-wrap">
+                <div class="settings-search">
+                    <span class="settings-search-icon">🔍</span>
+                    <input type="text" id="settings-search-input" placeholder="搜索设置..." autocomplete="off" aria-label="搜索设置">
+                    <button class="settings-search-clear" id="settings-search-clear" type="button" aria-label="清空设置搜索">✕</button>
+                    <span class="settings-search-match-count" id="settings-search-count"></span>
+                </div>
+            </div>
+            <div class="settings-panel">
+                <!-- 基础设置 -->
+                <div class="settings-section-title" data-icon="basic">基础设置</div>
+                <div class="settings-grid">
+                    <label class="setting-row">玩家名称
+                        <input type="text" id="player-name" placeholder="输入昵称" maxlength="12" value="玩家">
+                    </label>
+                    <label class="setting-row">AI难度
+                        <select id="difficulty">
+                            <option value="easy">简单</option>
+                            <option value="normal" selected>普通</option>
+                            <option value="hard">困难</option>
+                        </select>
+                    </label>
+                    <label class="setting-row">牌桌主题
+                        <select id="theme">
+                            <option value="green" selected>经典绿</option>
+                            <option value="redwood">红木</option>
+                            <option value="night">夜空蓝</option>
+                            <option value="ocean">海洋</option>
+                            <option value="autumn">秋日</option>
+                            <option value="purple">紫晶</option>
+                        </select>
+                    </label>
+                    <label class="setting-row">局数
+                        <select id="match-rounds">
+                            <option value="1" selected>1局</option>
+                            <option value="2">2局</option>
+                            <option value="3">3局</option>
+                            <option value="4">4局</option>
+                            <option value="8">8局</option>
+                            <option value="16">16局</option>
+                        </select>
+                    </label>
+                </div>
+
+                <!-- 音频设置 -->
+                <div class="settings-section-title" data-icon="audio">音频</div>
+                <div class="volume-control" data-search="音量 背景音乐 bgm">
+                    <label for="cfg-bgm-volume">背景音乐</label>
+                    <input type="range" class="settings-slider-input" id="cfg-bgm-volume" min="0" max="1" step="0.1" value="0.5" aria-describedby="cfg-bgm-volume-value">
+                    <output class="volume-value" id="cfg-bgm-volume-value" for="cfg-bgm-volume">50%</output>
+                </div>
+                <div class="volume-control" data-search="音量 音效 sfx">
+                    <label for="cfg-sfx-volume">操作音效</label>
+                    <input type="range" class="settings-slider-input" id="cfg-sfx-volume" min="0" max="1" step="0.1" value="0.5" aria-describedby="cfg-sfx-volume-value">
+                    <output class="volume-value" id="cfg-sfx-volume-value" for="cfg-sfx-volume">50%</output>
+                </div>
+                <div class="settings-grid settings-grid--spaced">
+                    <label class="setting-row">背景音乐
+                        <select data-setting="bgmTrack">
+                            <option value="default">默认</option>
+                            <option value="calm">舒缓</option>
+                            <option value="intense">紧张</option>
+                            <option value="none">静音</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="settings-toggles settings-toggles--spaced">
+                    <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="bgmEnabled" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">BGM开关</span>
+                    </label>
+                    <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="sfxEnabled" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">SFX开关</span>
+                    </label>
+                    <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableDealSound" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">发牌音效</span>
+                    </label>
+                    <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enablePlaySound" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">出牌音效</span>
+                    </label>
+                    <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableCallSound" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">叫分音效</span>
+                    </label>
+                    <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableBombSound" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">炸弹音效</span>
+                    </label>
+                    <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableWinSound" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">胜利音效</span>
+                    </label>
+                    <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableTickSound" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">倒计时滴答</span>
+                    </label>
+                </div>
+
+                <!-- 游戏规则（公平性关键：局前确定，局中锁定）-->
+                <details class="advanced-settings">
+                    <summary>游戏规则 ⚖️</summary>
+                    <div class="settings-grid">
+                        <label class="setting-row">叫分模式
+                            <select data-setting="callMode">
+                                <option value="score" selected>叫分（1-3分）</option>
+                                <option value="grab">抢地主</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">底分
+                            <select data-setting="baseScore">
+                                <option value="1">1分</option>
+                                <option value="2">2分</option>
+                                <option value="5">5分</option>
+                                <option value="10">10分</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">倍数
+                            <select data-setting="scoreMultiplier">
+                                <option value="1">1x</option>
+                                <option value="2">2x</option>
+                                <option value="3">3x</option>
+                                <option value="5">5x</option>
+                                <option value="10">10x</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">倒计时开关
+                            <select data-setting="timerEnabled">
+                                <option value="true" selected>开启</option>
+                                <option value="false">关闭</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">出牌时限
+                            <select data-setting="timerSeconds">
+                                <option value="10">10秒</option>
+                                <option value="15">15秒</option>
+                                <option value="20">20秒</option>
+                                <option value="30" selected>30秒</option>
+                                <option value="45">45秒</option>
+                                <option value="60">60秒</option>
+                                <option value="90">90秒</option>
+                                <option value="120">120秒</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">AI思考时间
+                            <select data-setting="aiThinkTime">
+                                <option value="0">即时</option>
+                                <option value="500">0.5秒</option>
+                                <option value="800">0.8秒</option>
+                                <option value="1000" selected>1秒</option>
+                                <option value="1500">1.5秒</option>
+                                <option value="2000">2秒</option>
+                                <option value="3000">3秒</option>
+                                <option value="5000">5秒</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">先手规则
+                            <select data-setting="firstPlayer">
+                                <option value="random" selected>轮庄</option>
+                                <option value="winner">上局赢家</option>
+                                <option value="landlord">固定地主位</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">大小王规则
+                            <select data-setting="jokerRule">
+                                <option value="standard" selected>标准（火箭最大）</option>
+                                <option value="split" disabled>可拆分使用（实验性）</option>
+                                <option value="disabled">禁用大小王</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">炸弹规则
+                            <select data-setting="bombRule">
+                                <option value="standard" selected>标准（4张同点）</option>
+                                <option value="soft" disabled>软炸弹（可带牌/实验性）</option>
+                                <option value="strict">严格（仅限4张）</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">游戏速度
+                            <select id="game-speed">
+                                <option value="0.7">慢速</option>
+                                <option value="1.0" selected>正常</option>
+                                <option value="1.5">快速</option>
+                                <option value="2.0">极速</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="laiziEnabled">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">癞子模式（百变牌）</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="allowSpring" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">春天加倍</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="allowAntiSpring" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">反春天加倍</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="bombDoubles" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">炸弹翻倍</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="rocketDoubles" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">火箭翻倍</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="strictRules" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">严格规则模式</span>
+                    </label>
+                    </div>
+                    <p class="settings-fairness-note">⚖️ 以上规则在开始游戏后锁定，保证对局公平</p>
+                </details>
+
+                <!-- 游戏变体 -->
+                <details class="advanced-settings">
+                    <summary>游戏变体 ⚖️</summary>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showCards">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">明牌（所有人手牌可见）</span>
+                    </label>
+                        <!-- exchangeThree 未实现，暂时隐藏 -->
+                        <label class="toggle-switch-wrap" style="display:none">
+                        <input type="checkbox"  data-setting="exchangeThree">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">换三张（开局互换）</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="noShuffle">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">不洗牌模式</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="bottomVisible">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">底牌始终可见</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="mustPlay">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">有牌必出</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="allowPassOnFirst" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">首家允许pass</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="allowTripleWithSingle" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">三带一</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="allowTripleWithPair" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">三带一对</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="allowAirplaneWithWings" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">飞机带翅膀</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="bombAsRocket">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">四王炸算火箭</span>
+                    </label>
+                    </div>
+                    <p class="settings-fairness-note">⚖️ 变体规则在开始游戏后锁定</p>
+                </details>
+
+                <!-- AI 行为 -->
+                <details class="advanced-settings">
+                    <summary>AI 行为</summary>
+                    <div class="settings-grid">
+                        <label class="setting-row">叫分策略
+                            <select data-setting="aiCallStrategy">
+                                <option value="conservative">保守</option>
+                                <option value="balanced" selected>平衡</option>
+                                <option value="aggressive">激进</option>
+                                <option value="random">随机</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">出牌风格
+                            <select data-setting="aiPlayStyle">
+                                <option value="conservative">保守</option>
+                                <option value="balanced" selected>平衡</option>
+                                <option value="aggressive">激进</option>
+                                <option value="random">随机</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">记牌水平
+                            <select data-setting="aiMemoryLevel">
+                                <option value="none">不记牌</option>
+                                <option value="basic" selected>基础记牌</option>
+                                <option value="perfect">完美记牌</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">合作程度
+                            <select data-setting="aiCooperation">
+                                <option value="none">独立作战</option>
+                                <option value="basic" selected>基础配合</option>
+                                <option value="perfect">完美配合</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="settings-slider-list">
+                        <label class="setting-slider">
+                        <span class="slider-label-row">虚张声势概率<span class="setting-value-output" data-setting-output="aiBluffRate"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="50" step="5" data-setting="aiBluffRate" value="10">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">风险容忍度<span class="setting-value-output" data-setting-output="aiRiskTolerance"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="100" step="10" data-setting="aiRiskTolerance" value="50">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">AI难度缩放<span class="setting-value-output" data-setting-output="aiDifficultyScale"></span></span>
+                            <input type="range" class="settings-slider-input" min="0.5" max="2.0" step="0.1" data-setting="aiDifficultyScale" value="1.0">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">AI表情频率<span class="setting-value-output" data-setting-output="aiEmoteRate"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="100" step="10" data-setting="aiEmoteRate" value="30">
+                        </label>
+                    </div>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="aiUseHint" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">AI使用提示系统</span>
+                    </label>
+                    </div>
+                </details>
+
+                <!-- 视觉设置 -->
+                <details class="advanced-settings">
+                    <summary>视觉</summary>
+                    <div class="settings-grid">
+                        <label class="setting-row">界面密度
+                            <select data-setting="uiDensity">
+                                <option value="comfortable">舒适</option>
+                                <option value="compact">紧凑</option>
+                                <option value="spacious">宽松</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">卡牌风格
+                            <select data-setting="cardStyle">
+                                <option value="modern">现代</option>
+                                <option value="classic">经典</option>
+                                <option value="minimal">极简</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">卡牌背面
+                            <select data-setting="cardBackStyle">
+                                <option value="classic">经典蓝</option>
+                                <option value="red">中国红</option>
+                                <option value="pattern">几何纹</option>
+                                <option value="minimal">纯色</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">字体大小
+                            <select data-setting="fontSize">
+                                <option value="small">小</option>
+                                <option value="medium" selected>中</option>
+                                <option value="large">大</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">对手牌显示
+                            <select data-setting="opponentCards">
+                                <option value="count">只显示数量</option>
+                                <option value="stack">小牌堆</option>
+                                <option value="spread">展开牌背</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">手牌排列
+                            <select data-setting="handArrangement">
+                                <option value="fan">扇形</option>
+                                <option value="straight">直线</option>
+                                <option value="stack">堆叠</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">出牌排列
+                            <select data-setting="playedCardArrangement">
+                                <option value="straight">直线</option>
+                                <option value="arc">弧线</option>
+                                <option value="fan">扇形</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="settings-slider-list">
+                        <label class="setting-slider">
+                        <span class="slider-label-row">卡牌圆角<span class="setting-value-output" data-setting-output="cardCornerRadius"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="16" step="1" data-setting="cardCornerRadius" value="8">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">卡牌边框<span class="setting-value-output" data-setting-output="cardBorderWidth"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="3" step="0.5" data-setting="cardBorderWidth" value="1">
+                        </label>
+                    </div>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showTableAura" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">牌桌光晕</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="darkMode">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">深色模式</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="highContrast">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">高对比度</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="colorblindMode">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">色盲友好</span>
+                    </label>
+                    </div>
+                    <div class="settings-grid settings-grid--spaced-sm">
+                        <label class="setting-row">色盲类型
+                            <select data-setting="colorblindType">
+                                <option value="none" selected>无</option>
+                                <option value="deuteranopia">红绿色盲</option>
+                                <option value="tritanopia">蓝黄色盲</option>
+                                <option value="achromatopsia">全色盲</option>
+                            </select>
+                        </label>
+                    </div>
+                </details>
+
+                <!-- 布局设置 -->
+                <details class="advanced-settings">
+                    <summary>布局</summary>
+                    <div class="settings-slider-list">
+                        <label class="setting-slider">
+                        <span class="slider-label-row">牌桌缩放<span class="setting-value-output" data-setting-output="tableScale"></span></span>
+                            <input type="range" class="settings-slider-input" min="0.85" max="1.15" step="0.05" data-setting="tableScale" value="1">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">手牌大小<span class="setting-value-output" data-setting-output="cardScale"></span></span>
+                            <input type="range" class="settings-slider-input" min="0.7" max="1" step="0.05" data-setting="cardScale" value="1">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">出牌大小<span class="setting-value-output" data-setting-output="playedCardScale"></span></span>
+                            <input type="range" class="settings-slider-input" min="0.8" max="1.15" step="0.05" data-setting="playedCardScale" value="1">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">回放牌大小<span class="setting-value-output" data-setting-output="replayCardScale"></span></span>
+                            <input type="range" class="settings-slider-input" min="0.85" max="1.35" step="0.05" data-setting="replayCardScale" value="1">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">出牌重叠<span class="setting-value-output" data-setting-output="playedOverlap"></span></span>
+                            <input type="range" class="settings-slider-input" min="6" max="28" step="1" data-setting="playedOverlap" value="16">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">选牌上浮<span class="setting-value-output" data-setting-output="selectedLift"></span></span>
+                            <input type="range" class="settings-slider-input" min="4" max="24" step="1" data-setting="selectedLift" value="8">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">悬停上浮<span class="setting-value-output" data-setting-output="hoverLift"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="16" step="1" data-setting="hoverLift" value="5">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">面板透明度<span class="setting-value-output" data-setting-output="panelOpacity"></span></span>
+                            <input type="range" class="settings-slider-input" min="45" max="95" step="5" data-setting="panelOpacity" value="80">
+                        </label>
+                    </div>
+                </details>
+
+                <!-- 动画与特效 -->
+                <details class="advanced-settings">
+                    <summary>动画与特效</summary>
+                    <div class="settings-grid">
+                        <label class="setting-row">动画强度
+                            <select data-setting="animationLevel">
+                                <option value="none">关闭</option>
+                                <option value="reduced">轻量</option>
+                                <option value="normal" selected>正常</option>
+                                <option value="fancy">华丽</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">粒子效果
+                            <select data-setting="particleIntensity">
+                                <option value="none">关闭</option>
+                                <option value="low">少量</option>
+                                <option value="normal" selected>正常</option>
+                                <option value="high">大量</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">屏幕震动
+                            <select data-setting="screenShakeIntensity">
+                                <option value="none">关闭</option>
+                                <option value="low">轻微</option>
+                                <option value="normal" selected>正常</option>
+                                <option value="high">强烈</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">浮动文字
+                            <select data-setting="floatingTextSize">
+                                <option value="small">小</option>
+                                <option value="normal" selected>正常</option>
+                                <option value="large">大</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">阴影强度
+                            <select data-setting="shadowIntensity">
+                                <option value="none">无</option>
+                                <option value="low">轻</option>
+                                <option value="normal" selected>正常</option>
+                                <option value="high">重</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">光效强度
+                            <select data-setting="glowIntensity">
+                                <option value="none">无</option>
+                                <option value="low">轻</option>
+                                <option value="normal" selected>正常</option>
+                                <option value="high">强</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">胜利特效
+                            <select data-setting="winEffectLevel">
+                                <option value="none">无</option>
+                                <option value="low">简单</option>
+                                <option value="normal" selected>标准</option>
+                                <option value="high">豪华</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">炸弹特效
+                            <select data-setting="bombEffectLevel">
+                                <option value="none">无</option>
+                                <option value="low">简单</option>
+                                <option value="normal" selected>标准</option>
+                                <option value="high">震撼</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="settings-slider-list">
+                        <label class="setting-slider">
+                        <span class="slider-label-row">动画速度<span class="setting-value-output" data-setting-output="animSpeed"></span></span>
+                            <input type="range" class="settings-slider-input" min="0.5" max="2.0" step="0.1" data-setting="animSpeed" value="1.0">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">过渡速度<span class="setting-value-output" data-setting-output="transitionSpeed"></span></span>
+                            <input type="range" class="settings-slider-input" min="0.3" max="2.0" step="0.1" data-setting="transitionSpeed" value="1.0">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">发牌节奏<span class="setting-value-output" data-setting-output="cardEnterStagger"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="60" step="5" data-setting="cardEnterStagger" value="30">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">粒子数量<span class="setting-value-output" data-setting-output="particleCount"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="200" step="10" data-setting="particleCount" value="50">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">连击播报阈值<span class="setting-value-output" data-setting-output="comboAnnounce"></span></span>
+                            <input type="range" class="settings-slider-input" min="2" max="10" step="1" data-setting="comboAnnounce" value="2">
+                        </label>
+                    </div>
+                </details>
+
+                <!-- 交互操作 -->
+                <details class="advanced-settings">
+                    <summary>交互操作</summary>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="clickToSelect" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">单击选牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="doubleClickToPlay">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">双击出牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="spaceConfirm" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">空格确认出牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="autoHint" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">自动提示可出牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="smartDiscard" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">智能弃牌纠正</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="playConfirm">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">出牌前确认</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="passConfirm">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">不出需确认</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="confirmOnBomb">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">炸弹前确认</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showShortcuts" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">快捷键提示</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="oneClickPlay">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">一键出牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="rightClickCancel" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">右键取消选牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="wheelZoom" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">Ctrl/⌘滚轮缩放</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="autoArrange" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">自动整理手牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="autoSortAfterPlay">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">出牌后自动排序</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="stickySelection">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">粘滞选牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showPlayPreview" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示出牌预览</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="gestureEnabled" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">触摸手势</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="swipeToSelect" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">滑动选牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="longPressHint">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">长按牌型提示</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="hapticEnabled" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">触觉反馈</span>
+                    </label>
+                    </div>
+                    <div class="settings-slider-list">
+                        <label class="setting-slider">
+                        <span class="slider-label-row">拖选灵敏度<span class="setting-value-output" data-setting-output="dragThreshold"></span></span>
+                            <input type="range" class="settings-slider-input" min="2" max="18" step="1" data-setting="dragThreshold" value="7">
+                        </label>
+                    </div>
+                </details>
+
+                <!-- 辅助功能 -->
+                <details class="advanced-settings">
+                    <summary>辅助功能</summary>
+                    <div class="settings-grid">
+                        <label class="setting-row">提示详细度
+                            <select data-setting="hintDetail">
+                                <option value="none">仅高亮</option>
+                                <option value="type" selected>显示牌型</option>
+                                <option value="full">牌型+牌名</option>
+                            </select>
+                        </label>
+                        <label class="setting-row">手牌排序
+                            <select data-setting="sortOrder">
+                                <option value="value" selected>标准点数</option>
+                                <option value="suit">按花色</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showTutorial" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">新手引导</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="autoOpenTracker">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">自动打开记牌器</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="autoOpenHistory">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">自动打开出牌历史</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showRemainingCount" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示剩余牌数</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showWinProbability">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示胜率估算</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showBestMove">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示推荐出牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="handAnalysis">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">手牌分析面板</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showOpponentTendency">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示对手倾向</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showDangerCards">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">标记危险牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="highlightPlayable" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">高亮可出牌</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showPatternName" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示牌型名称</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showPlayerStats">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示玩家统计</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showOpponentCall" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示对手叫分</span>
+                    </label>
+                    </div>
+                </details>
+
+                <!-- 面板开关 -->
+                <details class="advanced-settings">
+                    <summary>面板开关</summary>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableCardTracker" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">记牌器</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableAutoHint" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">智能提示</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableReplay" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">牌局回放</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableStats" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">统计记录</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="enableAchievements" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">成就系统</span>
+                    </label>
+                    </div>
+                </details>
+
+                <!-- 无障碍 -->
+                <details class="advanced-settings">
+                    <summary>无障碍</summary>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="reduceMotion">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">减少动画</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="largeClickTargets">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">大点击区域</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="highVisibility">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">高可见度模式</span>
+                    </label>
+                    </div>
+                </details>
+
+                <!-- 网络 -->
+                <details class="advanced-settings">
+                    <summary>网络</summary>
+                    <div class="settings-grid">
+                        <label class="setting-row">网络质量
+                            <select data-setting="networkQuality">
+                                <option value="auto" selected>自动检测</option>
+                                <option value="excellent">极佳</option>
+                                <option value="good">良好</option>
+                                <option value="poor">较差</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="settings-slider-list">
+                        <label class="setting-slider">
+                        <span class="slider-label-row">重连次数<span class="setting-value-output" data-setting-output="reconnectAttempts"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="10" step="1" data-setting="reconnectAttempts" value="3">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">心跳间隔(秒)<span class="setting-value-output" data-setting-output="heartbeatInterval"></span></span>
+                            <input type="range" class="settings-slider-input" min="1" max="15" step="1" data-setting="heartbeatInterval" value="5">
+                        </label>
+                    </div>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="lagCompensation" checked>
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">延迟补偿</span>
+                    </label>
+                    </div>
+                </details>
+
+                <!-- 性能与调试 -->
+                <details class="advanced-settings">
+                    <summary>性能与调试</summary>
+                    <div class="settings-grid">
+                        <label class="setting-row">帧率限制
+                            <select data-setting="frameLimit">
+                                <option value="30">30 FPS</option>
+                                <option value="60" selected>60 FPS</option>
+                                <option value="120">120 FPS</option>
+                                <option value="0">无限制</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="settings-toggles">
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showFPS">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示FPS</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="showMemory">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">显示内存使用</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="lazyRender">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">懒渲染模式</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="debugMode">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">调试模式</span>
+                    </label>
+                        <label class="toggle-switch-wrap">
+                        <input type="checkbox"  data-setting="experimentalFeatures">
+                        <span class="toggle-switch-track"></span>
+                        <span class="toggle-switch-label">实验性功能</span>
+                    </label>
+                    </div>
+                </details>
+
+                <!-- 高级设置 -->
+                <details class="advanced-settings">
+                    <summary>高级 ⚙️</summary>
+                    <div class="settings-slider-list">
+                        <label class="setting-slider">
+                        <span class="slider-label-row">观战延迟(秒)<span class="setting-value-output" data-setting-output="spectatorDelay"></span></span>
+                            <input type="range" class="settings-slider-input" min="0" max="5" step="0.5" data-setting="spectatorDelay" value="0">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">自动保存(秒)<span class="setting-value-output" data-setting-output="autoSaveInterval"></span></span>
+                            <input type="range" class="settings-slider-input" min="10" max="120" step="10" data-setting="autoSaveInterval" value="30">
+                        </label>
+                        <label class="setting-slider">
+                        <span class="slider-label-row">历史上限<span class="setting-value-output" data-setting-output="maxHistory"></span></span>
+                            <input type="range" class="settings-slider-input" min="10" max="200" step="10" data-setting="maxHistory" value="50">
+                        </label>
+                    </div>
+                    <div class="settings-reset-row">
+                        <button id="btn-reset-ux-settings" class="btn-small" type="button">恢复体验默认</button>
+                        <button id="btn-reset-all-settings" class="btn-small danger" type="button">恢复所有默认</button>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- 首次进入引导选择对话框 -->
+    <div id="welcome-guide-overlay" class="hidden">
+        <div class="welcome-guide-bg"></div>
+        <div class="welcome-guide-modal">
+            <div class="welcome-guide-emoji">🃏</div>
+            <h2 class="welcome-guide-title">欢迎来到斗地主！</h2>
+            <p class="welcome-guide-desc">经典三人扑克游戏 · 1个地主 vs 2个农民</p>
+            <div class="welcome-guide-choices">
+                <button id="btn-guide-newbie" class="welcome-guide-btn welcome-guide-btn-primary">
+                    <span class="wgb-icon">📖</span>
+                    <span class="wgb-text">我是新手</span>
+                    <span class="wgb-sub">查看完整教程（5分钟）</span>
+                </button>
+                <button id="btn-guide-expert" class="welcome-guide-btn welcome-guide-btn-secondary">
+                    <span class="wgb-icon">😎</span>
+                    <span class="wgb-text">我是大神</span>
+                    <span class="wgb-sub">直接开始游戏</span>
+                </button>
+            </div>
+            <label class="welcome-guide-skip">
+                <input type="checkbox" id="chk-guide-skip"> 不再询问，下次直接进入游戏
+            </label>
+        </div>
+    </div>
+
+    <!-- 游戏主界面 -->
+    <div id="game-screen" class="screen hidden">
+        <div class="game-header">
+            <button id="btn-back-menu" class="btn-small">← 返回</button>
+            <span id="mode-display">人机对战</span>
+            <div class="header-controls">
+                <button id="btn-pause" class="btn-small" title="暂停" aria-label="暂停游戏"><svg class="ui-icon" aria-hidden="true"><use href="#icon-pause"></use></svg></button>
+                <button id="btn-sound-toggle" class="btn-small" title="关闭音效" aria-label="关闭音效" aria-pressed="true"><svg class="ui-icon" aria-hidden="true"><use href="#icon-volume"></use></svg></button>
+                <button id="btn-fullscreen" class="btn-small" title="全屏" aria-label="切换全屏"><svg class="ui-icon" aria-hidden="true"><use href="#icon-fullscreen"></use></svg></button>
+            </div>
+        </div>
+        
+        <div id="game-table">
+            <div id="ddz-table">
+                <div class="table-aura"></div>
+                <!-- 玩家区域由JS动态生成 -->
+            </div>
+            
+            <div id="side-panels">
+                <button id="btn-toggle-card-tracker" class="btn-panel-toggle" title="记牌器">🃏 记牌</button>
+                <button id="btn-toggle-history" class="btn-panel-toggle" title="出牌历史">📜 历史</button>
+                <div id="card-tracker" class="side-panel hidden">
+                    <h4>记牌器</h4>
+                    <div class="tracker-grid" id="tracker-content"></div>
+                </div>
+                <div id="play-history" class="side-panel hidden">
+                    <h4>出牌历史</h4>
+                    <div class="history-list" id="history-content"></div>
+                </div>
+            </div>
+            
+            <div id="controls-area">
+                <div id="call-controls" class="hidden">
+                    <button data-call="0">不叫</button>
+                    <button data-call="1">1分</button>
+                    <button data-call="2">2分</button>
+                    <button data-call="3">3分</button>
+                    <button id="btn-auto-call" class="btn-auto">托管</button>
+                </div>
+                <div id="play-controls" class="hidden">
+                    <button id="btn-play">出牌 <kbd>Space</kbd></button>
+                    <button id="btn-pass">不出 <kbd>P</kbd></button>
+                    <button id="btn-hint">提示 <kbd>H</kbd></button>
+                    <button id="btn-reset">重选 <kbd>R</kbd></button>
+                    <button id="btn-auto-play" class="btn-auto">托管</button>
+                </div>
+                <div id="game-info">
+                    <span id="phase-text">准备中</span>
+                    <span id="score-text"></span>
+                    <span id="shortcut-hint">快捷键: H提示 P不出 Space出牌</span>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div id="fps-counter" class="debug-counter debug-counter--fps">FPS: --</div>
+        <div id="memory-counter" class="debug-counter debug-counter--mem">MEM: --</div>
+    </div>
+
+    <!-- 全局模态弹窗 -->
+    <div id="modal-overlay" class="hidden">
+        <div id="modal-content"></div>
+    </div>
+
+    <!-- LAN 联机界面 -->
+    <div id="lan-screen" class="screen hidden">
+        <div class="screen-bg-decoration"></div>
+        <div class="lan-container">
+            <header class="screen-header">
+                <div class="screen-header__icon">🌐</div>
+                <h2 class="screen-header__title">局域网联机</h2>
+                <p class="screen-header__subtitle">与好友在同一网络下实时对战</p>
+            </header>
+            <div class="lan-tabs">
+                <button class="lan-tab active" data-tab="join">
+                    <span class="lan-tab__icon">🚪</span>
+                    <span class="lan-tab__text">加入房间</span>
+                </button>
+                <button class="lan-tab" data-tab="host">
+                    <span class="lan-tab__icon">🏠</span>
+                    <span class="lan-tab__text">创建房间</span>
+                </button>
+            </div>
+            <div class="lan-body">
+                <div id="lan-join-panel" class="lan-panel">
+                    <div class="form-group">
+                        <label class="form-label" for="lan-room-id">房间号</label>
+                        <div class="form-input-wrap">
+                            <span class="form-input-icon">🔑</span>
+                            <input type="text" id="lan-room-id" class="form-input" placeholder="输入 8 位房间号" maxlength="8">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="lan-player-name">玩家名称</label>
+                        <div class="form-input-wrap">
+                            <span class="form-input-icon">👤</span>
+                            <input type="text" id="lan-player-name" class="form-input" placeholder="输入昵称" maxlength="12">
+                        </div>
+                    </div>
+                    <button id="btn-lan-join" class="screen-btn screen-btn--primary">
+                        <span>🚀</span>
+                        <span>加入房间</span>
+                    </button>
+                </div>
+                <div id="lan-host-panel" class="lan-panel hidden">
+                    <div class="lan-status-card">
+                        <div class="lan-status-dot" id="lan-status-dot"></div>
+                        <p id="lan-status" class="lan-status-text">正在检测本机托管服务...</p>
+                    </div>
+                    <div id="room-info" class="lan-room-info hidden">
+                        <div class="info-row">
+                            <span class="info-label">房间号</span>
+                            <span class="info-value info-value--code" id="room-id-display">-</span>
+                        </div>
+                    </div>
+                    <div id="lan-host-url-row" class="lan-url-row hidden">
+                        <label class="form-label" for="lan-host-url">局域网地址</label>
+                        <div class="form-input-wrap form-input-wrap--readonly">
+                            <input type="text" id="lan-host-url" class="form-input" readonly>
+                            <button id="btn-copy-lan-url" class="btn-copy" title="复制地址" aria-label="复制局域网地址">📋</button>
+                        </div>
+                    </div>
+                    <div id="player-list" class="lan-player-list"></div>
+                    <div class="lan-actions">
+                        <button id="btn-lan-host" class="screen-btn screen-btn--primary">
+                            <span>🏠</span>
+                            <span>创建房间</span>
+                        </button>
+                        <button id="btn-lan-start" class="screen-btn screen-btn--accent hidden">
+                            <span>🎮</span>
+                            <span>开始游戏</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <button id="btn-back-lan" class="screen-btn screen-btn--ghost screen-btn--back">
+                <span>←</span>
+                <span>返回菜单</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 自定义模式界面 -->
+    <div id="custom-screen" class="screen hidden">
+        <div class="screen-bg-decoration"></div>
+        <div class="custom-container">
+            <header class="screen-header">
+                <div class="screen-header__icon">⚙️</div>
+                <h2 class="screen-header__title">自定义模式</h2>
+                <p class="screen-header__subtitle">自由设定规则，打造专属对局</p>
+            </header>
+            <div class="custom-body">
+                <div class="config-group">
+                    <h3 class="config-group__title">
+                        <span class="config-group__icon">🎮</span>
+                        游戏选项
+                    </h3>
+                    <div class="config-items">
+                        <label class="config-item">
+                            <span class="config-item__label">AI 难度</span>
+                            <div class="config-item__control">
+                                <select id="cfg-ai-diff" class="form-select">
+                                    <option value="easy">简单</option>
+                                    <option value="normal" selected>普通</option>
+                                    <option value="hard">困难</option>
+                                </select>
+                            </div>
+                        </label>
+                        <label class="config-item">
+                            <span class="config-item__label">叫分模式</span>
+                            <div class="config-item__control">
+                                <select id="cfg-call-mode" class="form-select">
+                                    <option value="score">叫分</option>
+                                    <option value="grab">抢地主</option>
+                                </select>
+                            </div>
+                        </label>
+                        <label class="config-item config-item--toggle">
+                            <span class="config-item__label">音效</span>
+                            <div class="config-item__control">
+                                <label class="toggle-switch-wrap">
+                                    <input type="checkbox" id="cfg-sound" checked>
+                                    <span class="toggle-switch-track"></span>
+                                </label>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="config-group">
+                    <h3 class="config-group__title">
+                        <span class="config-group__icon">🔧</span>
+                        特殊规则
+                    </h3>
+                    <div class="config-items">
+                        <label class="config-item config-item--toggle">
+                            <span class="config-item__label">显示所有手牌（观战模式）</span>
+                            <div class="config-item__control">
+                                <label class="toggle-switch-wrap">
+                                    <input type="checkbox" id="cfg-show-all">
+                                    <span class="toggle-switch-track"></span>
+                                </label>
+                            </div>
+                        </label>
+                        <label class="config-item config-item--toggle">
+                            <span class="config-item__label">开启托管</span>
+                            <div class="config-item__control">
+                                <label class="toggle-switch-wrap">
+                                    <input type="checkbox" id="cfg-auto-play">
+                                    <span class="toggle-switch-track"></span>
+                                </label>
+                            </div>
+                        </label>
+                        <label class="config-item config-item--toggle">
+                            <span class="config-item__label">癞子模式</span>
+                            <div class="config-item__control">
+                                <label class="toggle-switch-wrap">
+                                    <input type="checkbox" id="cfg-laizi">
+                                    <span class="toggle-switch-track"></span>
+                                </label>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-actions">
+                <button id="btn-custom-start" class="screen-btn screen-btn--primary">
+                    <span>🎮</span>
+                    <span>开始游戏</span>
+                </button>
+                <button id="btn-back-custom" class="screen-btn screen-btn--ghost screen-btn--back">
+                    <span>←</span>
+                    <span>返回菜单</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 残局训练界面 -->
+    <div id="endgame-screen" class="screen hidden">
+        <div class="screen-bg-decoration"></div>
+        <div class="endgame-container">
+            <header class="screen-header">
+                <div class="screen-header__icon">🧩</div>
+                <h2 class="screen-header__title">残局训练</h2>
+                <p class="screen-header__subtitle">固定牌局，磨练牌技</p>
+            </header>
+            <div class="endgame-progress-bar">
+                <div class="endgame-progress-track">
+                    <div class="endgame-progress-fill" id="endgame-progress-fill"></div>
+                </div>
+                <span class="endgame-progress-text" id="endgame-progress-text">0/5</span>
+            </div>
+            <div class="endgame-levels-grid" id="endgame-levels-grid">
+                <!-- JS 动态渲染关卡卡片 -->
+            </div>
+            <div class="endgame-actions">
+                <button id="btn-back-endgame" class="screen-btn screen-btn--ghost screen-btn--back">
+                    <span>←</span>
+                    <span>返回菜单</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 极限挑战界面 -->
+    <div id="challenge-screen" class="screen hidden">
+        <div class="screen-bg-decoration"></div>
+        <div class="challenge-container">
+            <header class="screen-header">
+                <div class="screen-header__icon">⚔️</div>
+                <h2 class="screen-header__title">极限挑战</h2>
+                <p class="screen-header__subtitle">特殊规则限制，考验真正牌技</p>
+            </header>
+            <div class="challenge-progress-bar">
+                <div class="challenge-progress-track">
+                    <div class="challenge-progress-fill" id="challenge-progress-fill"></div>
+                </div>
+                <span class="challenge-progress-text" id="challenge-progress-text">0/10</span>
+            </div>
+            <div class="challenge-levels-grid" id="challenge-levels-grid">
+                <!-- JS 动态渲染关卡卡片 -->
+            </div>
+            <div class="challenge-actions">
+                <button id="btn-back-challenge" class="screen-btn screen-btn--ghost screen-btn--back">
+                    <span>←</span>
+                    <span>返回菜单</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 回放界面 -->
+    <div id="replay-screen" class="screen hidden">
+        <div class="replay-container" id="replay-container"></div>
+        <button id="btn-back-replay" class="btn-small btn-back btn-back--fixed">← 返回</button>
+    </div>
+
+    <!-- 牌谱工坊面板 -->
+    <div id="workshop-screen" class="screen hidden">
+        <div class="workshop-container">
+            <h2>🎞️ 牌谱工坊</h2>
+            <div class="workshop-subtitle">保存、回放与分享精彩对局</div>
+
+            <div class="workshop-import-bar">
+                <input type="text" id="workshop-import-input" placeholder="粘贴分享码导入牌谱..." maxlength="20000" aria-label="牌谱分享码">
+                <button id="btn-workshop-import" class="btn-primary">📥 导入</button>
+            </div>
+
+            <div class="workshop-stats" id="workshop-stats">
+                <!-- JS 动态渲染统计 -->
+            </div>
+
+            <div class="workshop-records-grid" id="workshop-records-grid">
+                <!-- JS 动态渲染牌谱列表 -->
+            </div>
+        </div>
+        <button id="btn-back-workshop" class="btn-small btn-back btn-back--fixed">← 返回</button>
+    </div>
+
+    <!-- 赛季任务面板 -->
+    <div id="season-quest-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="season-quest-title">
+        <div class="season-quest-modal">
+            <div class="season-quest-header">
+                <h2 id="season-quest-title">🎯 赛季任务</h2>
+                <button id="btn-close-season-quests" class="btn-close" aria-label="关闭">✕</button>
+            </div>
+            <div class="season-quest-body" id="season-quest-content">
+                <!-- JS 动态渲染 -->
+            </div>
+            <div class="season-quest-footer">
+                <button id="btn-claim-all-quests" class="btn-primary">🎁 一键领取</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 锦标赛配置面板 -->
+    <div id="tournament-setup-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="tournament-setup-title">
+        <div class="tournament-setup-modal">
+            <div class="tournament-setup-header">
+                <h2 id="tournament-setup-title">🏆 锦标赛</h2>
+                <button id="btn-close-tournament-setup" class="btn-close" aria-label="关闭">✕</button>
+            </div>
+            <div class="tournament-setup-body">
+                <div class="tour-config-group">
+                    <label class="tour-config-label">赛制局数</label>
+                    <div class="tour-round-options">
+                        <button class="tour-round-btn active" data-rounds="3">3 局</button>
+                        <button class="tour-round-btn" data-rounds="5">5 局</button>
+                        <button class="tour-round-btn" data-rounds="10">10 局</button>
+                    </div>
+                    <div class="tour-custom-rounds">
+                        <label>自定义: <input type="number" id="tour-custom-rounds-input" min="2" max="50" value="3"> 局</label>
+                    </div>
+                </div>
+                <div class="tour-config-group">
+                    <label class="tour-config-label" for="tour-difficulty">AI 难度</label>
+                    <select id="tour-difficulty" class="tour-select">
+                        <option value="easy">简单</option>
+                        <option value="normal" selected>普通</option>
+                        <option value="hard">困难</option>
+                        <option value="expert">专家</option>
+                    </select>
+                </div>
+                <div class="tour-config-group">
+                    <label class="tour-config-label">说明</label>
+                    <div class="tour-desc-text">
+                        锦标赛采用积分制，每局结束后按斗地主规则计分。<br>
+                        全部对局结束后按累计总分排名。<br>
+                        锦标赛记录将自动保存到本地。
+                    </div>
+                </div>
+                <div class="tour-stats-preview" id="tour-stats-preview">
+                    <!-- JS 动态渲染历史统计 -->
+                </div>
+            </div>
+            <div class="tournament-setup-footer">
+                <button id="btn-start-tournament" class="btn-primary">🚀 开始锦标赛</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 成就面板 -->
+    <div id="achievement-panel" class="hidden">
+        <div class="achievement-content">
+            <h3>成就系统</h3>
+            <div id="achievement-list"></div>
+            <button id="btn-close-achievements" class="btn-small">关闭</button>
+        </div>
+    </div>
+
+    <!-- 暂停覆盖层 -->
+    <div id="pause-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+        <div class="pause-backdrop"></div>
+        <div class="pause-card">
+            <div class="pause-card__icon">⏸</div>
+            <h2 id="pause-title" class="pause-card__title">游戏暂停</h2>
+            <p class="pause-card__hint">按 <kbd class="pause-kbd">ESC</kbd> 继续游戏</p>
+            <div class="pause-card__actions">
+                <button id="btn-resume" class="screen-btn screen-btn--primary screen-btn--large">
+                    <span>▶</span>
+                    <span>继续游戏</span>
+                </button>
+                <button id="btn-pause-settings" class="screen-btn screen-btn--secondary screen-btn--large">
+                    <span>⚙️</span>
+                    <span>设置</span>
+                </button>
+                <button id="btn-pause-exit" class="screen-btn screen-btn--danger screen-btn--large">
+                    <span>🚪</span>
+                    <span>退出到菜单</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 完整教程覆盖层 -->
+    <div id="tutorial-fullscreen" class="hidden">
+        <div class="tutorial-bg"></div>
+        <div class="tutorial-container">
+            <nav class="tutorial-nav">
+                <h3>📖 斗地主教程</h3>
+                <ul class="tutorial-chapters">
+                    <li data-chapter="0" class="active"><span class="tut-chap-num">1</span> 欢迎来到斗地主</li>
+                    <li data-chapter="1"><span class="tut-chap-num">2</span> 认识牌型</li>
+                    <li data-chapter="2"><span class="tut-chap-num">3</span> 牌型大小比较</li>
+                    <li data-chapter="3"><span class="tut-chap-num">4</span> 角色与发牌</li>
+                    <li data-chapter="4"><span class="tut-chap-num">5</span> 叫分与抢地主</li>
+                    <li data-chapter="5"><span class="tut-chap-num">6</span> 出牌规则</li>
+                    <li data-chapter="6"><span class="tut-chap-num">7</span> 特殊规则与得分</li>
+                    <li data-chapter="7"><span class="tut-chap-num">8</span> 实战演练</li>
+                    <li data-chapter="8"><span class="tut-chap-num">9</span> 记牌与读牌</li>
+                    <li data-chapter="9"><span class="tut-chap-num">10</span> 进阶技巧与误区</li>
+                </ul>
+                <div class="tutorial-progress">
+                    <div class="tutorial-progress-track">
+                        <div class="tutorial-progress-bar"></div>
+                    </div>
+                    <div class="tutorial-progress-text">0%</div>
+                </div>
+            </nav>
+            <main class="tutorial-main">
+                <div class="tutorial-header">
+                    <div class="tutorial-header-text">
+                        <h2 class="tutorial-title">欢迎来到斗地主</h2>
+                        <p class="tutorial-subtitle">中国最受欢迎的扑克游戏</p>
+                    </div>
+                    <button class="tutorial-close" title="关闭教程" aria-label="关闭教程">✕</button>
+                </div>
+                <div class="tutorial-body"></div>
+                <div class="tutorial-footer">
+                    <button class="tutorial-prev" disabled>← 上一步</button>
+                    <div class="tutorial-dots"></div>
+                    <button class="tutorial-next">下一步 →</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 公告弹窗 -->
+    <div id="changelog-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="changelog-title">
+        <div class="changelog-modal">
+            <div class="changelog-header">
+                <h2 id="changelog-title">🎉 更新日志</h2>
+                <button id="btn-close-changelog" class="btn-close" aria-label="关闭">✕</button>
+            </div>
+            <div class="changelog-body">
+                <div class="changelog-current">
+                    <div class="changelog-version-badge">v1.2.49</div>
+                    <h3>📱 移动横屏交互收尾</h3>
+                    <ul>
+                        <li>🤖 <strong>玩家信息可见</strong>：横屏下记牌器与历史按钮不再遮挡右侧 AI 头像、名称和手牌</li>
+                        <li>👆 <strong>触控安全区</strong>：工具组移至右下角空白区，保留 44px 触控区并适配设备安全边距</li>
+                        <li>🗂️ <strong>面板展开优化</strong>：记牌器和出牌历史从工具栏上方展开，保持在视口内且不压住叫分区</li>
+                        <li>🧪 <strong>横屏回归补强</strong>：新增玩家信息重叠、触控尺寸与面板边界检查</li>
+                    </ul>
+                </div>
+                <details class="changelog-history">
+                    <summary>📚 历史版本</summary>
+                    <div class="changelog-history-content">
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.48</div>
+                            <h4>🎨 交互音效与部署稳定性修复</h4>
+                            <ul>
+                                <li>✨ <strong>菜单交互修复</strong>：入场动画结束后清理内联样式，模式卡片交互不再被覆盖</li>
+                                <li>🔊 <strong>静音反馈优化</strong>：关闭音效前和重新开启后都会播放有效反馈</li>
+                                <li>🎛️ <strong>SFX 开关修复</strong>：回合提示与落牌音正确遵循细分音效设置</li>
+                                <li>🚀 <strong>Pages 部署修复</strong>：CI 补齐 Chromium，修复安全依赖告警并完善 Pages 配置</li>
+                                <li>🧪 <strong>回归补强</strong>：新增菜单动画、静音反馈和音效分类检查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.47</div>
+                            <h4>🃏 手牌选中层级修复</h4>
+                            <ul>
+                                <li>↕️ <strong>纯垂直选牌</strong>：选中牌只向上移动，不缩放或改变原有扇形层级</li>
+                                <li>🪜 <strong>层级顺序修复</strong>：选中、悬停和键盘聚焦均保留每张牌自身的手牌索引</li>
+                                <li>💡 <strong>建议状态兼容</strong>：智能剔除提示不再覆盖选中牌的位置与缩放</li>
+                                <li>🎬 <strong>入场过渡清理</strong>：发牌动画结束后恢复标准交互过渡</li>
+                                <li>🧪 <strong>回归补强</strong>：新增选中层级、变换矩阵和建议状态优先级检查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.46</div>
+                            <h4>🎨 导航图标与移动体验升级</h4>
+                            <ul>
+                                <li>🧭 <strong>统一导航图标</strong>：核心模式、工具入口和游戏头部改用一致的线性 SVG 图标，不再依赖跨平台表现不一的系统 Emoji</li>
+                                <li>✨ <strong>模式层级优化</strong>：补齐挑战类卡片样式，统一图标容器、箭头与悬停反馈，并移除锦标赛行内样式</li>
+                                <li>📱 <strong>移动工具区优化</strong>：六个工具入口改为三列网格，增大触控区域并避免标题拥挤换行</li>
+                                <li>🔊 <strong>音效状态同步</strong>：静音按钮动态切换 SVG 状态，继续同步无障碍标签和按下状态</li>
+                                <li>🌿 <strong>状态可读性修复</strong>：提高每日挑战文案对比度，并修正完成态与三星态样式类名不匹配</li>
+                                <li>🧪 <strong>回归补强</strong>：新增图标结构、音效切换、移动端网格尺寸和页面溢出检查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.45</div>
+                            <h4>🔊 音频静音与舒适性修复</h4>
+                            <ul>
+                                <li>🔇 <strong>即时静音修复</strong>：关闭主音效或 SFX 会停止已经调度的 Web Audio 音频节点，不再残留连音</li>
+                                <li>🛡️ <strong>异步音频防护</strong>：AudioContext 恢复期间再次校验开关，避免关闭后迟到播放</li>
+                                <li>♿ <strong>减少动画修复</strong>：应用内开关现在同步阻止屏幕震动和全屏闪光</li>
+                                <li>🎚️ <strong>音量反馈升级</strong>：滑块显示实时金色进度，并向读屏提供百分比数值</li>
+                                <li>🧹 <strong>设置精简</strong>：移除尚未实现的头像风格与语言入口，避免无效选项误导</li>
+                                <li>🧪 <strong>回归补强</strong>：新增音频节点、减少动画和音量可访问性检查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.44</div>
+                            <h4>⌨️ 快捷键帮助与延迟音效修复</h4>
+                            <ul>
+                                <li>🖥️ <strong>帮助层覆盖修复</strong>：移除全屏遮罩的错误位移动画，帮助面板重新完整覆盖视口</li>
+                                <li>⌨️ <strong>帮助入口无障碍</strong>：快捷键提示支持 Enter/Space 打开，并同步按钮语义和展开状态</li>
+                                <li>♿ <strong>模态焦点管理</strong>：打开后聚焦关闭按钮，Tab 不会逃出，关闭后返回原入口</li>
+                                <li>🔇 <strong>延迟音效止漏</strong>：关闭主音效或 SFX 会立即取消提示、叫分和胜利等已排队尾音</li>
+                                <li>🔊 <strong>分类开关同步</strong>：叫分与胜利尾音播放前重新检查全局和分类开关</li>
+                                <li>🧪 <strong>回归补强</strong>：新增帮助层覆盖、键盘焦点及延迟 SFX 生命周期检查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.43</div>
+                            <h4>⌨️ 模态键盘体验与音效分类修复</h4>
+                            <ul>
+                                <li>⏸️ <strong>暂停层语义补全</strong>：暂停界面升级为标准 dialog，补齐标题关联和模态属性</li>
+                                <li>⌨️ <strong>键盘焦点约束</strong>：暂停、设置、公告和牌风分析的 Tab 焦点保持在当前弹窗内</li>
+                                <li>🎵 <strong>暂停 BGM 修复</strong>：恢复游戏不再从头重播一次性的胜利或失败音乐</li>
+                                <li>🔊 <strong>音效分类纠偏</strong>：抢地主、倒计时提示和火箭分别遵循叫分、滴答和炸弹开关</li>
+                                <li>♿ <strong>焦点生命周期修复</strong>：暂停时聚焦继续按钮，恢复后准确返回原操作位置</li>
+                                <li>🧪 <strong>回归补强</strong>：新增 dialog 语义、焦点环、暂停 BGM 和音效分类检查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.42</div>
+                            <h4>⏸️ 暂停设置与音频生命周期修复</h4>
+                            <ul>
+                                <li>⏸️ <strong>暂停设置修复</strong>：从暂停层进入设置时牌局继续保持暂停，关闭后回到暂停层和原操作入口</li>
+                                <li>♿ <strong>弹窗焦点修复</strong>：公告与牌风分析打开后焦点进入弹窗，关闭后准确返回触发按钮</li>
+                                <li>🎵 <strong>BGM 恢复纠偏</strong>：设置中重新开启 BGM 不再重播只应出现一次的胜利或失败音乐</li>
+                                <li>🧹 <strong>SFX 生命周期修复</strong>：多段音效完成后立即释放定时器记录，避免长时间牌局持续积累</li>
+                                <li>🔊 <strong>音效开关一致性</strong>：细分开关同步约束底牌揭示、地主确认和赛末号角</li>
+                                <li>🧪 <strong>回归补强</strong>：新增暂停设置、弹窗焦点、一次性 BGM、音效分类和定时器释放检查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.41</div>
+                            <h4>🃏 玩家手牌与音频体验深度修复</h4>
+                            <ul>
+                                <li>🎨 <strong>手牌视觉升级</strong>：增加低对比度独立牌槽和金色选中勾标，大牌面保持清晰且不遮挡点数</li>
+                                <li>⌨️ <strong>键盘与无障碍</strong>：每张手牌支持 Tab 聚焦及 Enter/Space 选牌，实时同步选中状态和数量语义</li>
+                                <li>💡 <strong>提示状态修复</strong>：AI 提示选牌统一经过选牌状态入口，不再出现视觉与辅助状态分裂</li>
+                                <li>📱 <strong>移动横屏优化</strong>：玩家身份改为屏内紧凑胶囊，长昵称安全截断且不再压住第一张牌</li>
+                                <li>🎵 <strong>SFX/BGM 修复</strong>：切换 BGM 真正完成淡出并保留共享音频链，停止 BGM 不再截断延迟音效</li>
+                                <li>🧪 <strong>回归补强</strong>：新增牌槽、键盘选牌、提示同步、移动身份和音频生命周期自动化检查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.40</div>
+                            <h4>🛡️ 全面稳定性与全端体验修复</h4>
+                            <ul>
+                                <li>⚙️ <strong>设置面板修复</strong>：折叠分类标题不再被裁成空白条，“音量”可准确找到 BGM/SFX，无匹配时不再残留空分类</li>
+                                <li>🃏 <strong>大手牌全端加固</strong>：901–1100px 与 561–900px 响应式重新收拢，横屏地主 20 张牌也能完整留在屏内</li>
+                                <li>🔍 <strong>缩放状态一致</strong>：Ctrl/⌘ + 滚轮缩放会同步设置控件和本地存储；旧版超出安全范围的比例自动纠正</li>
+                                <li>👆 <strong>触屏滚动纠偏</strong>：窄屏手牌溢出时，横向滑动优先用于浏览，不再被拖选手势抢占</li>
+                                <li>🎵 <strong>BGM 竞态修复</strong>：切歌、静音或页面恢复期间的旧异步音符会被代次校验拦截，避免叠音</li>
+                                <li>♿ <strong>质量与安全</strong>：补齐关键输入控件标签，修复生产与开发依赖安全告警，并扩充桌面/移动/音频回归</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.39</div>
+                            <h4>🃏 选牌命中与手牌顺序再优化</h4>
+                            <ul>
+                                <li>🃏 <strong>选中牌不挡邻牌</strong>：已选牌保持在普通手牌下方，相邻牌的外露区域可以继续点击选择</li>
+                                <li>🔢 <strong>手牌标准整理</strong>：全局排序统一为 <code>3 4 5 6 7 8 9 10 J Q K A 2 小王 大王</code>，同点数也按固定花色顺序稳定排列</li>
+                                <li>🎨 <strong>选牌 UI 降噪</strong>：降低默认选牌/悬停上浮和高亮阴影，让大牌面不再互相压迫</li>
+                                <li>⚙️ <strong>设置项纠偏</strong>：移除容易误触的智能分组排序入口，默认排序显示为标准点数</li>
+                                <li>🧪 <strong>回归补强</strong>：新增相邻选牌命中、手牌自然升序和设置默认值自查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.38</div>
+                            <h4>🃏 手牌层级与标准排序修复</h4>
+                            <ul>
+                                <li>🃏 <strong>选牌层级修复</strong>：已选牌现在压在相邻手牌下方，不再挡住继续选择其他牌</li>
+                                <li>🔢 <strong>标准手牌顺序</strong>：玩家手牌固定按 <code>3 4 5 6 7 8 9 10 J Q K A 2 小王 大王</code> 整理</li>
+                                <li>🎨 <strong>UI 降噪</strong>：收轻选牌高亮阴影和抬起反馈，减少大手牌下的视觉遮挡感</li>
+                                <li>⚙️ <strong>隐藏设置纠偏</strong>：智能分组排序默认关闭，避免不可见设置继续影响实战手牌</li>
+                                <li>🧪 <strong>回归补强</strong>：新增手牌顺序与相邻牌可点击性的浏览器自查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.37</div>
+                            <h4>🔧 静默牌局收尾与少牌提醒自查</h4>
+                            <ul>
+                                <li>🧹 <strong>死路径清理</strong>：移除渲染器内残留的评论引擎引用、聊天消息渲染函数和语音滑块绑定</li>
+                                <li>🌐 <strong>LAN 兼容修复</strong>：旧客户端发来的聊天消息现在会被安全忽略，不再调用已移除的聊天 UI</li>
+                                <li>⚠️ <strong>少牌提醒自查</strong>：新增 UI 回归验证“我就剩 2 张牌了”提醒确实显示</li>
+                                <li>🔇 <strong>静默体验加固</strong>：继续确保牌局不出现闲聊、快捷短语、语音或解说气泡干扰</li>
+                                <li>🧪 <strong>全链路验证</strong>：重新覆盖 UI、移动横屏、SFX/BGM、LAN、挑战、回放和 console error 检查</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.36</div>
+                            <h4>🃏 屏内手牌与静默牌局优化</h4>
+                            <ul>
+                                <li>🃏 <strong>手牌不再超屏</strong>：玩家 17 张与地主 20 张手牌都收拢在屏幕内，不再依赖横向滚动浏览</li>
+                                <li>✅ <strong>选牌安全区修复</strong>：选中牌抬起后仍保持在视口内，避免顶部或左右被裁掉</li>
+                                <li>🔇 <strong>静默牌局</strong>：移除聊天、快捷短语、语音播报、战斗解说入口和气泡，只保留必要 SFX/BGM</li>
+                                <li>⚠️ <strong>少牌提醒</strong>：玩家少于 3 张牌时显示“我就剩 X 张牌了”式提醒，替代无关对话</li>
+                                <li>🎞️ <strong>动画降噪</strong>：减少持续呼吸、头像脉冲、选牌和过牌动画强度，整体 UI 更稳</li>
+                                <li>🧪 <strong>测试补强</strong>：UI 回归新增屏内手牌、20 张地主手牌、选牌不出屏、聊天语音入口移除和移动横屏不溢出断言</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.35</div>
+                            <h4>🖱️ 手牌滚轮冲突修复</h4>
+                            <ul>
+                                <li>🖱️ <strong>滚轮行为拆分</strong>：普通滚轮现在只横向浏览大牌手牌，不再同时触发牌面缩放</li>
+                                <li>⌨️ <strong>缩放手势明确</strong>：牌面缩放改为 <code>Ctrl/⌘ + 滚轮</code>，避免和浏览手牌抢同一个操作</li>
+                                <li>⚙️ <strong>设置文案同步</strong>：交互设置里的“滚轮缩放”改为“Ctrl/⌘滚轮缩放”，和真实操作一致</li>
+                                <li>🧪 <strong>测试补强</strong>：UI 回归新增普通滚轮不缩放、Ctrl 滚轮才缩放的冲突断言</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.34</div>
+                            <h4>↔️ 大牌手牌浏览优化</h4>
+                            <ul>
+                                <li>🖱️ <strong>滚轮横向浏览</strong>：桌面端鼠标滚轮现在可直接推动大牌手牌横向移动，不用精准拖动滚动条</li>
+                                <li>↔️ <strong>滚动边界反馈</strong>：手牌溢出时加入首尾渐隐，帮助判断左右还有没有牌</li>
+                                <li>📊 <strong>浏览进度反馈</strong>：手牌底部加入细进度条，快速感知当前浏览位置</li>
+                                <li>🧪 <strong>测试补强</strong>：UI 回归新增滚动状态初始化、滚轮横向滚动和进度变化断言</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.33</div>
+                            <h4>🃏 大牌手牌滚动修复</h4>
+                            <ul>
+                                <li>🃏 <strong>真正大牌模式</strong>：桌面玩家手牌提升到 184×256，宽屏提升到 220×306，牌面面积约为旧版 5 倍以上</li>
+                                <li>↔️ <strong>横向滚动承载</strong>：17 张手牌不再被强行压进一屏，改为大牌横向浏览，首张牌保持完整可见</li>
+                                <li>📐 <strong>底部牌区加高</strong>：玩家区域为大牌重新分配高度，减少牌面、提示和控制按钮之间的拥挤</li>
+                                <li>🧪 <strong>测试补强</strong>：UI 回归改为检查大牌尺寸、横向滚动启用、首张不裁切和控制层透明</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.32</div>
+                            <h4>🃏 手牌放大与遮挡修复</h4>
+                            <ul>
+                                <li>🃏 <strong>玩家手牌放大</strong>：桌面端玩家牌从 82×114 提升到 122×170，宽屏进一步提升到 150×210，可见牌面显著变大</li>
+                                <li>🧱 <strong>黑色横条修复</strong>：移除控制层整条半透明背景，只保留按钮组自身背景，不再挡住手牌</li>
+                                <li>📐 <strong>布局防裁切</strong>：手牌区加宽加高，减少重叠并提高层级，首尾牌不会被桌面边界裁掉</li>
+                                <li>📱 <strong>移动横屏修复</strong>：低高度横屏单独调整控制区位置并隐藏冗余提示，避免按钮或快捷键提示压住手牌</li>
+                                <li>🧪 <strong>测试补强</strong>：UI 回归新增手牌尺寸、裁切、控制层透明和移动横屏不重叠断言</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.31</div>
+                            <h4>🎧 音频开关与状态恢复深度修复</h4>
+                            <ul>
+                                <li>🔊 <strong>总音效开关修复</strong>：游戏内按钮或快捷键关闭后再次开启，会恢复菜单/牌局循环 BGM，不再只恢复静态开关状态</li>
+                                <li>♿ <strong>按钮状态同步</strong>：音效按钮现在同步 <code>aria-pressed</code>、标题和读屏文案，关闭/开启状态更清楚</li>
+                                <li>🎵 <strong>一次性音乐保护</strong>：胜利/失败结算音乐仍不会因恢复音效而重复播放</li>
+                                <li>🛡️ <strong>音频底层防护</strong>：Web Audio 节点连接增加空 compressor 回退，降低边界状态下静音或异常风险</li>
+                                <li>🧪 <strong>测试补强</strong>：新增总音效开关恢复 BGM 的回归测试</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.30</div>
+                            <h4>🎧 UI/UX/SFX/BGM 体验修复</h4>
+                            <ul>
+                                <li>🎵 <strong>BGM 修复</strong>：页面切到后台再返回时，菜单/牌局背景音乐现在能按原场景恢复，不会静默丢失</li>
+                                <li>🔊 <strong>SFX 设置补全</strong>：恢复“叫分音效”独立开关，和已有音频代码、历史公告保持一致</li>
+                                <li>♿ <strong>音量控件改进</strong>：BGM / SFX / 语音滑块补全 label 关联，键盘和读屏操作更清楚</li>
+                                <li>🧪 <strong>自查补强</strong>：默认设置测试覆盖叫分音效开关，防止设置面板再次缺项</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.29</div>
+                            <h4>🔧 总体 Bug / UIUX / SFX / BGM 深度修复</h4>
+                            <ul>
+                                <li>🚨 <strong>结算致命修复</strong>：修复赛季任务上报引用不存在的 <code>isWin</code>，避免胜负结算后统计、回放、复盘链路被异常中断</li>
+                                <li>📊 <strong>牌风数据修复</strong>：修复反春天字段拼写不一致，牌风分析现在能正确累计反春天表现</li>
+                                <li>⚔️ <strong>极限挑战修复</strong>：星级统计不再依赖不存在的 <code>history.type</code> 字段，炸弹、纯顺子、总出牌数评级恢复准确</li>
+                                <li>🎯 <strong>交互修复</strong>：极限挑战规则拦截返回 <code>false</code> 时，出牌按钮不再误判成功、清空选牌或隐藏控制区</li>
+                                <li>🧪 <strong>测试补强</strong>：新增挑战星级 history 兼容测试与 Renderer 失败反馈测试；赛季任务和牌谱导入的预期失败路径不再污染控制台</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.25</div>
+                            <h4>🔧 UI/UX/SFX/BGM 全面深度修复（第六轮）</h4>
+                            <ul>
+                                <li>🎞️ 牌谱工坊修复：菜单隐藏、toast 方法不存在、clipboard 崩溃、分享码有效性校验、删除确认、空输入提示、导入防抖、反春天自动保存、过渡动画</li>
+                                <li>🎵 音频修复：audio.js <code>nodeRef</code> 未定义；极限挑战/残局模式 forceLandlord 分支 BGM 未触发</li>
+                                <li>🖥️ 屏幕切换修复：<code>_transitionToScreen()</code> 隐藏所有非目标屏幕；牌谱工坊回放正确清理旧 <code>ReplayManager</code></li>
+                                <li>🛡️ 模态框修复：<code>showMenu()</code> 关闭赛季任务/锦标赛配置；ESC 键覆盖所有模态框；重复打开保护；z-index 层级补全</li>
+                                <li>🧠 渲染器防护：15 个核心方法添加 <code>_destroyed</code> 检查；成就/任务 toast 数量限制为 3 个</li>
+                                <li>🧪 测试：全站 202/202 通过，新增 challenge-mode + replay-workshop 到 test:all</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.24</div>
+                            <h4>🆕 新增：牌谱工坊</h4>
+                            <ul>
+                                <li>🎞️ 牌谱工坊：保存、管理、回放与分享精彩对局牌谱</li>
+                                <li>💾 自动保存：每局结束后自动存入，最多保留 50 条记录</li>
+                                <li>📤 分享码：Base64 分享码，跨设备导入</li>
+                                <li>▶️ 回放支持：工坊内直接回放</li>
+                                <li>📊 分类统计：按模式统计牌谱数量</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.23</div>
+                            <h4>🔧 极限挑战模式深度修复</h4>
+                            <ul>
+                                <li>🚨 game-state.js _isPatternAllowed 未处理 bombRule='disabled'</li>
+                                <li>🎯 bombBeatRocket 检测修复；calculateChallengeStars 外部标记</li>
+                                <li>🙈 盲牌斗地主 disableTracker / 斗帝之路 mustSpring 实现</li>
+                                <li>🛡️ forceLandlord 补全 initialHands / bottomCards / lastPlay</li>
+                                <li>🖥️ UI 修复：信息栏显示、challenge-screen 布局、_destroyed 检查</li>
+                                <li>🎵 音频：返回关卡列表停止 BGM；返回菜单关闭模态框</li>
+                                <li>🧪 新增 bombBeatRocket 星级判定测试</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.22</div>
+                            <h4>🔧 极限挑战模式 Bug 修复</h4>
+                            <ul>
+                                <li>🚨 game-state.js _isPatternAllowed 未处理 bombRule='disabled'</li>
+                                <li>🎯 bombBeatRocket 检测修复；calculateChallengeStars 外部标记</li>
+                                <li>🙈 盲牌斗地主 disableTracker / 斗帝之路 mustSpring 实现</li>
+                                <li>🛡️ forceLandlord 补全 initialHands / bottomCards / lastPlay</li>
+                                <li>🖥️ UI 修复：信息栏显示、challenge-screen 布局、_destroyed 检查</li>
+                                <li>🎵 音频：返回关卡列表停止 BGM；返回菜单关闭模态框</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.21</div>
+                            <h4>🆕 新增：极限挑战模式</h4>
+                            <ul>
+                                <li>⚔️ 全新模式「极限挑战」：10个特殊规则限制的挑战关卡</li>
+                                <li>🚫 禁炸令、⚡ 速战速决、🛡️ 保守派、📜 严格执法、🔒 不能Pass</li>
+                                <li>🙈 盲牌斗地主、💰 底分翻倍、💣 炸弹之王、⚔️ 孤军奋战、👑 斗帝之路</li>
+                                <li>⭐ 1~3星评级，解锁制递进，数据持久化到 localStorage</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.20</div>
+                            <h4>全面深度 Bug 检查与修复（第五轮）</h4>
+                            <ul>
+                                <li>🚨 核心逻辑修复：修复 <code>game-state.js</code> 抢地主阶段 <code>currentCallPlayer</code> 不更新；<code>_finishCalling</code> landlord 为 null 时死锁</li>
+                                <li>🃏 规则引擎修复：<code>_tryStraightWithLaizi</code> 显式拒绝重复真实牌</li>
+                                <li>🎵 音频系统修复：移除 BGM 双重调度；<code>stopBGM()</code> 清理 loop timer；<code>InvalidStateError</code> 防护</li>
+                                <li>🖥️ 渲染器修复：<code>_initLayout</code> 重复绑定清理；setTimeout 统一替换为 <code>_setTimer</code></li>
+                                <li>🧠 AI 教练修复：<code>sameCard</code> 王牌比较；<code>passRate</code> 字段错误</li>
+                                <li>📊 数据修复：season-quest bombCount NaN；endgame bestSteps falsy；残局关卡5索引矛盾</li>
+                                <li>🌐 LAN 联机修复：<code>_syncGameStart</code> 校验 <code>startRound</code> 返回值</li>
+                                <li>⚙️ 自定义模式修复：无预设牌分支缺失 <code>_applyGameRules()</code></li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.19</div>
+                            <h4>全面深度 Bug 检查与修复（第四轮）</h4>
+                            <ul>
+                                <li>🛡️ 动画系统修复：<code>Animations.cancelAll()</code> 现在真正取消全部 30+ 处定时器；庆祝状态锁在销毁时正确复位</li>
+                                <li>🃏 规则引擎修复：癞子顺子误判 bug——含额外牌时不再错误识别为顺子</li>
+                                <li>🎵 音频系统修复：SFX <code>setTimeout</code> 纳入统一管理；<code>destroy()</code> 时全部清理；音效细粒度设置支持热更新</li>
+                                <li>📊 游戏状态修复：<code>pass</code> 存入 history 的 pattern 改为 <code>HandPattern</code> 实例；<code>startRound</code> 增加牌组长度校验</li>
+                                <li>🌐 LAN 联机修复：非 Host 客户端正确维护 <code>playerMapping</code>；<code>_destroyRoom</code> 只关闭仍属于该房间的连接</li>
+                                <li>⚙️ 主程序修复：<code>_bindUXSettings()</code> 添加防重复绑定保护；设置变更时自动热重载 SFX 设置</li>
+                                <li>🌍 时区修复：<code>getTodayString</code> / <code>getWeekStartString</code> 改用 UTC 方法计算</li>
+                                <li>📹 回放修复：回放列表过滤脏数据后再渲染</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.18</div>
+                            <h4>全面深度 Bug 检查与修复（第三轮）</h4>
+                            <ul>
+                                <li>🚨 致命修复：修复 <code>startDailyMode()</code> 每日挑战完全无法启动（错误传入 DOM 对象、调用不存在方法、缺失关键初始化）</li>
+                                <li>🚨 致命修复：修复 "再来一局" 时旧挑战结果面板覆盖新游戏的定时器泄漏；修复 <code>_roundEndBound</code> 未重置导致统计/成就/回放全部丢失</li>
+                                <li>🚨 严重修复：修复 <code>BaseMode.destroy()</code> 不 resolve Promise 定时器导致异步流程永久挂起、内存泄漏</li>
+                                <li>🎵 音频修复：<code>stopBGM()</code> 清理 <code>_bgmGain/_masterCompressor</code>；<code>_ensureContext()</code> resume 后验证 state；监听 <code>visibilitychange</code> 防止后台 BGM 叠音；核心音效增加节流</li>
+                                <li>🎯 交互修复：一键出牌取消选中时清除 timeout 防止错误触发；分数滚动动画保存 RAF id 避免幽灵动画；拖拽选牌时节流 <code>_updateHandHint</code> 调用</li>
+                                <li>🛡️ 动画修复：<code>cancelAll()</code> 恢复 body transform 并重置 <code>_shakeCount</code>；<code>screenShake</code> 修复 <code>_activeRafs</code> 帧级泄漏</li>
+                                <li>📐 主程序修复：<code>showMenu()</code> 现在关闭所有面板（设置/公告/牌风/成就）；<code>_calcStreak</code> 统一使用 UTC+8</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.17</div>
+                            <h4>UI/UX/SFX/BGM 全面检查与改进</h4>
+                            <ul>
+                                <li>🚨 致命修复：修复 <code>startDailyMode()</code> 每日挑战完全无法启动——错误传入 DOM 对象、调用不存在方法、缺失关键初始化</li>
+                                <li>🎵 音频修复：<code>stopBGM()</code> 未清理 <code>_bgmGain/_masterCompressor</code> 导致重建 Context 后无声；toggleBGM 不再重播一次性 win/lose BGM；核心音效增加节流防止音爆重叠</li>
+                                <li>🎯 交互改进：出牌按钮根据选牌状态动态启用/禁用；涟漪效果仅在无拖拽意图时触发，避免滚动误反馈</li>
+                                <li>♿ 无障碍：<code>screenShake</code> 与 <code>flashScreen</code> 尊重 <code>prefers-reduced-motion: reduce</code> 系统偏好</li>
+                                <li>✨ 面板 UX：挑战结果→历史记录切换等待关闭动画完成；历史面板淡入淡出；分享失败 fallback 从 alert() 改为 toast</li>
+                                <li>🏷️ 徽章改进：每日挑战徽章使用 CSS <code>.daily-badge</code> 类，已完成/三星有独立视觉样式</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.16</div>
+                            <h4>全面深度 Bug 检查与修复</h4>
+                            <ul>
+                                <li>🚨 严重修复：修复每日挑战结果面板永远弹不出的 bug</li>
+                                <li>🚨 严重修复：修复连胜计算逻辑错误——今天输了仍算连胜</li>
+                                <li>🔧 数据修复：getRecords 缺失 timestamp 导致记录静默丢弃</li>
+                                <li>🔧 时区修复：getTodayString 固定使用 UTC+8</li>
+                                <li>🛡️ 内存泄漏修复：renderHands _controlListeners 累积等</li>
+                                <li>🛡️ 安全修复：showAchievementUnlock 使用 esc 转义</li>
+                                <li>🎵 音频修复：BGM 切换定时器被 ENDED 阶段清除</li>
+                                <li>🎯 UX 修复：closeChallengeResult timeout 未追踪</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.15</div>
+                            <h4>UI/UX/SFX/BGM 全面检查与改进</h4>
+                            <ul>
+                                <li>🔧 渲染修复：修复结算弹窗 XSS 转义函数块级作用域 bug（非比赛模式报错）</li>
+                                <li>🔊 音频修复：renderer.destroy() 现在正确关闭 AudioContext</li>
+                                <li>🎵 音效设置：补全缺失的 "call" 音效开关</li>
+                                <li>🎯 面板清理：返回菜单/启动新游戏时自动关闭残留面板</li>
+                                <li>✨ 每日挑战 UX：结算弹窗 1.8s 后自动关闭避免重叠</li>
+                                <li>📐 层级优化：挑战结果 z-index 提升至 250</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.14</div>
+                            <h4>全面深度修复 &amp; 规则引擎完善</h4>
+                            <ul>
+                                <li>🔧 <strong>牌风分析修复</strong>：修复50局后数据失真、成长建议崩溃、数据迁移与空数据防护</li>
+                                <li>🎙️ <strong>评论系统修复</strong>：修复destroy状态泄漏、队列冷却抖动、禁用后仍显示的问题</li>
+                                <li>🛡️ <strong>渲染器修复</strong>：修复timer泄漏、事件监听器泄漏、多次initLayout累积问题</li>
+                                <li>⚙️ <strong>主程序修复</strong>：修复公告版本号不匹配、面板关闭竞态、roundEnd重复监听、LAN renderer未清理</li>
+                                <li>📐 <strong>结构与样式修复</strong>：修复modal-overlay嵌套、toast z-index被遮挡等DOM/CSS问题</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.13</div>
+                            <h4>牌风分析系统</h4>
+                            <ul>
+                                <li>📊 6维雷达图深度解析出牌风格（攻击性/稳健性/技巧性/速度型/运气质/爆发性）</li>
+                                <li>🏷️ 个性化标签：核弹级、闪电侠、斗地主之神等专属称号</li>
+                                <li>📈 胜率、场均炸弹、春天率、平均思考时间等多维度统计</li>
+                                <li>💡 AI智能分析短板并给出针对性提升建议</li>
+                                <li>🎨 SVG纯代码绘制高颜值六维能力图</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.12</div>
+                            <h4>牌局神评论系统</h4>
+                            <ul>
+                                <li>🎙️ 牌局神评论：炸弹、火箭、春天、连击等关键时刻自动弹出热血解说评论</li>
+                                <li>💬 120+ 条评论库：根据牌型语境智能匹配幽默/热血解说词</li>
+                                <li>🎨 情绪色系统：炸弹红、火箭金、春天粉、胜利彩虹等视觉风格</li>
+                                <li>🎯 6 插槽防重叠：多条评论分散显示，不会互相遮挡</li>
+                                <li>⚙️ 可开关：设置面板中可自由开启/关闭评论功能</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.11</div>
+                            <h4>第三轮深度修复</h4>
+                            <ul>
+                                <li>修复暂停时 AI Promise 死锁（<code>_pendingTimers</code> 手动 resolve）</li>
+                                <li>修复 AI 回合中央倒计时闪烁（仅人类回合显示）</li>
+                                <li>修复游戏结束倒计时未清理（<code>onPhaseChange</code> ENDED 分支）</li>
+                                <li>Renderer <code>destroy()</code> 多次调用防护、BGM/SFX 即时同步</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.10</div>
+                            <h4>第二轮补充修复</h4>
+                            <ul>
+                                <li>清理 CSS 死代码，优化 560px 下手牌裁剪与 overflow</li>
+                                <li>修复 center-countdown z-index、控制区小屏定位</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.9</div>
+                            <h4>布局重构 & Bug 修复</h4>
+                            <ul>
+                                <li>对角布局、中央倒计时、手牌放大、控制区上移</li>
+                                <li>修复 timerEnabled 字符串判断、超时面板不隐藏等</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-version">
+                            <div class="changelog-version-badge">v1.2.8</div>
+                            <h4>全站 UI 深度美化</h4>
+                            <ul>
+                                <li>LAN/自定义/暂停/成就/回放界面全面毛玻璃化</li>
+                                <li>通用组件化重构，统一视觉语言</li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
+            </div>
+            <div class="changelog-footer">
+                <button id="btn-changelog-ok" class="btn-primary">知道了 👍</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 牌风分析面板 -->
+    <div id="play-style-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="play-style-title">
+        <div class="play-style-modal">
+            <div class="play-style-header">
+                <h2 id="play-style-title">📊 牌风分析</h2>
+                <button id="btn-close-play-style" class="btn-close" aria-label="关闭">✕</button>
+            </div>
+            <div class="play-style-body" id="play-style-content">
+                <!-- JS 动态渲染 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 每日挑战结果面板 -->
+    <div id="challenge-result-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="challenge-result-title">
+        <div class="challenge-result-modal">
+            <div class="challenge-result-header">
+                <h2 id="challenge-result-title">📅 每日挑战结果</h2>
+            </div>
+            <div class="challenge-result-body" id="challenge-result-content">
+                <!-- JS 动态渲染 -->
+            </div>
+            <div class="challenge-result-footer">
+                <button id="btn-challenge-share" class="btn-primary">📋 复制成绩</button>
+                <button id="btn-challenge-history" class="btn-secondary">📜 历史记录</button>
+                <button id="btn-challenge-close" class="btn-secondary">返回菜单</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 每日挑战历史面板 -->
+    <div id="challenge-history-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="challenge-history-title">
+        <div class="challenge-history-modal">
+            <div class="challenge-history-header">
+                <h2 id="challenge-history-title">📜 挑战历史</h2>
+                <button id="btn-close-challenge-history" class="btn-close" aria-label="关闭">✕</button>
+            </div>
+            <div class="challenge-history-body" id="challenge-history-content">
+                <!-- JS 动态渲染 -->
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

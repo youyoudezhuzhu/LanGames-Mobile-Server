@@ -20,6 +20,13 @@
       "port": 4175,
       "engine": "websocket",
       "servedStaticDir": "games/liarsbar"
+    },
+    "doudizhu": {
+      "id": "doudizhu",
+      "name": "斗地主",
+      "port": 4174,
+      "engine": "websocket",
+      "servedStaticDir": "games/doudizhu"
     }
   }
 }
