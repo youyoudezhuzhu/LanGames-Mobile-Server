@@ -635,3 +635,10 @@ body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after
   .hand-scroll { height: calc(96px + var(--hand-top-room)); }
   .hand { height: calc(86px + var(--hand-top-room)); }
 }
+
+/* ===== 手机横屏：去掉底部版本号，牌桌铺满视口 ===== */
+@media (orientation: landscape) and (max-height: 560px) {
+  .game-footer { display: none !important; }
+  .game-shell { grid-template-rows: 52px minmax(0, 1fr) 0px !important; min-height: 100vh !important; }
+  .table-wrap { min-height: 0 !important; }
+}
