@@ -318,6 +318,12 @@
           }
         };
         btn.addEventListener("click", function (e) { e.stopPropagation(); toggle(); });
+        /* 默认全屏：进入页面自动请求全屏；浏览器若需手势则首次点击时自动全屏，
+           并在全屏变化时触发重排（让牌桌铺满） */
+        function autoFs(){ var e=document.documentElement, f=e.requestFullscreen||e.webkitRequestFullscreen; if(f&&!fsEl()){ try{f.call(e);}catch(_){} } }
+        setTimeout(autoFs, 400);
+        document.addEventListener("pointerdown", function fh(){ autoFs(); document.removeEventListener("pointerdown", fh); }, {passive:true});
+        document.addEventListener("fullscreenchange", function(){ try{ setTimeout(function(){ window.dispatchEvent(new Event("resize")); }, 120); }catch(_){} });
         var sync = function () { btn.classList.toggle("fs", !!fsEl()); };
         document.addEventListener("fullscreenchange", sync);
         document.addEventListener("webkitfullscreenchange", sync);
