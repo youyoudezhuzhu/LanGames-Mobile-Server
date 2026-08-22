@@ -1,0 +1,2404 @@
+/**
+ * UI Overhaul - 主菜单、对局 HUD、结算页重构
+ * 加载顺序在 main.css 之后，覆盖旧样式
+ */
+
+/* ========== CSS 变量补充 ========== */
+:root {
+    --hud-bg: rgba(18, 18, 24, 0.92);
+    --hud-border: rgba(212, 168, 67, 0.12);
+    --hud-gold-glow: 0 0 20px rgba(212, 168, 67, 0.15);
+    --turn-glow: 0 0 16px rgba(212, 168, 67, 0.5);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --tile-face-top: #fffdf5;
+    --tile-face-bottom: #e8dcc1;
+    --tile-edge: #b9a77f;
+}
+
+.ui-icon {
+    width: 1.25em;
+    height: 1.25em;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.icon-btn,
+.icon-label,
+.lobby-header h2,
+.modal-panel-header h3,
+.stats-card > h3 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* game.css 中的旧 flex 头部会与绝对定位返回按钮冲突；统一恢复居中标题。 */
+.lobby-header {
+    display: block;
+    text-align: center;
+}
+
+.mahjong-type-card .type-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 54px;
+    margin: 0 auto 8px;
+    color: #172517;
+    background: linear-gradient(180deg, #f4ecd9, #d8c9a8);
+    border: 2px solid rgba(212, 168, 67, 0.7);
+    border-radius: 7px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
+    filter: none;
+}
+
+/* ========== Screen 基础调整 ========== */
+#game-screen.screen {
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.08), transparent 42%),
+        radial-gradient(circle at 50% 50%, var(--bg-secondary), var(--bg-primary) 72%);
+}
+
+#main-menu.screen {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    padding-top: env(safe-area-inset-top);
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 10%, rgba(212, 168, 67, 0.08), transparent 30%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 45%),
+        var(--bg-primary);
+}
+
+/* ========== 主菜单 ========== */
+.menu-hero {
+    padding: 28px 20px 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.menu-brand {
+    margin-bottom: 12px;
+}
+
+.menu-logo {
+    margin-bottom: 8px;
+}
+
+.menu-logo img,
+.loading-mahjong img {
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 5px 14px rgba(212, 168, 67, 0.25));
+}
+
+.menu-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent-gold);
+    letter-spacing: 4px;
+    margin: 0;
+}
+
+.menu-tagline {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    letter-spacing: 1px;
+}
+
+.menu-player-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-panel);
+    border: 1px solid var(--hud-border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.8rem;
+}
+
+.menu-lv {
+    color: var(--accent-gold);
+    font-weight: 700;
+}
+
+.menu-exp-track {
+    width: 80px;
+    height: 5px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.menu-exp-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-gold-dark), var(--accent-gold));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.menu-exp-text {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-variant-numeric: tabular-nums;
+}
+
+/* 菜单主体 */
+.menu-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 16px;
+    padding: clamp(24px, 4vh, 48px) 20px 0;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.menu-primary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.menu-btn.primary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, rgba(212,168,67,0.08), rgba(139,90,43,0.04));
+    border: 1px solid rgba(212, 168, 67, 0.2);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    backdrop-filter: blur(4px);
+}
+
+.menu-btn.primary:hover {
+    background: linear-gradient(135deg, rgba(212,168,67,0.15), rgba(139,90,43,0.08));
+    border-color: rgba(212, 168, 67, 0.4);
+    transform: translateY(-2px);
+    box-shadow: var(--hud-gold-glow);
+}
+
+.menu-btn.primary:active {
+    transform: translateY(0);
+}
+
+.menu-btn.primary .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    color: var(--accent-gold-light);
+    background: rgba(212, 168, 67, 0.1);
+    border: 1px solid rgba(212, 168, 67, 0.16);
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.menu-btn.primary .btn-icon .ui-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.menu-btn.primary .btn-text-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.menu-btn.primary .btn-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.menu-btn.primary .btn-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.menu-btn.primary .btn-arrow {
+    font-size: 1.4rem;
+    color: var(--accent-gold);
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.menu-btn.primary:hover .btn-arrow {
+    opacity: 1;
+}
+
+/* 次要按钮 */
+.menu-secondary-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.menu-btn.compact {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 8px;
+    background: var(--bg-panel);
+    border: 1px solid rgba(212, 168, 67, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.75rem;
+}
+
+.menu-btn.compact:hover {
+    background: var(--bg-secondary);
+    border-color: rgba(212, 168, 67, 0.25);
+    transform: translateY(-2px);
+}
+
+.menu-btn.compact .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    color: var(--accent-gold);
+    background: rgba(212, 168, 67, 0.07);
+    border-radius: 9px;
+}
+
+.menu-btn.compact .btn-icon .ui-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.menu-btn.compact .btn-text {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* 菜单底部工具栏 */
+.menu-footer {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 12px 20px 20px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    flex-shrink: 0;
+}
+
+.menu-tool-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.menu-tool-btn:hover {
+    border-color: rgba(212, 168, 67, 0.25);
+    color: var(--text-secondary);
+    background: rgba(212, 168, 67, 0.05);
+}
+
+.menu-tool-btn .ui-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.back-btn .ui-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.player-avatar .ui-icon {
+    width: 1em;
+    height: 1em;
+    color: var(--text-secondary);
+}
+
+.replay-ctrl-btn .ui-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.replay-ctrl-btn.primary .ui-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* ========== 设置弹窗 ========== */
+.settings-panel {
+    max-width: 480px;
+    width: 90vw;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-panel .modal-panel-body {
+    overflow-y: auto;
+    padding: 0;
+}
+
+.settings-group {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.settings-group:last-child {
+    border-bottom: none;
+}
+
+.settings-group h4 {
+    margin: 0 0 12px 0;
+    font-size: 0.85rem;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.setting-hint {
+    margin: -2px 0 4px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    line-height: 1.45;
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.setting-row label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.setting-row input,
+.setting-row select {
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(212, 168, 67, 0.12);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    outline: none;
+    min-width: 120px;
+    transition: border-color 0.2s;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    min-height: 44px;
+}
+
+.setting-row input:focus,
+.setting-row select:focus {
+    border-color: var(--accent-gold);
+}
+
+.setting-row.slider-row {
+    gap: 10px;
+}
+
+.setting-row.slider-row input[type="range"] {
+    flex: 1;
+    min-width: 0;
+    -webkit-appearance: none;
+    height: 44px;
+    background: transparent;
+    border-radius: 2px;
+    border: none;
+    padding: 0;
+}
+
+.setting-row.slider-row input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+}
+
+.setting-row.slider-row input[type="range"]::-moz-range-track {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+}
+
+.setting-row.slider-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--accent-gold);
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -6px;
+}
+
+/* ========== 通用弹窗面板 ========== */
+.modal-panel {
+    background: var(--bg-panel);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hud-border);
+    box-shadow: var(--shadow-elevated);
+    position: relative;
+    z-index: 251;
+    max-width: 90vw;
+}
+
+.modal-panel.settings-panel {
+    width: min(480px, calc(100vw - 40px));
+    max-width: 480px;
+}
+
+.modal-panel.compact-panel {
+    width: min(360px, calc(100vw - 40px));
+}
+
+.modal-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.modal-panel-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.modal-panel-header h3 .ui-icon,
+.lobby-header h2 .ui-icon {
+    color: var(--accent-gold);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+}
+
+/* ========== 暂停菜单 ========== */
+.pause-panel {
+    width: 320px;
+    max-width: 90vw;
+}
+
+.pause-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 20px 20px;
+}
+
+.pause-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.pause-action-btn:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(212, 168, 67, 0.2);
+}
+
+.pause-action-btn.primary {
+    background: linear-gradient(135deg, rgba(212,168,67,0.15), rgba(139,90,43,0.08));
+    border-color: rgba(212, 168, 67, 0.3);
+    font-weight: 600;
+}
+
+.pause-action-btn.primary:hover {
+    background: linear-gradient(135deg, rgba(212,168,67,0.22), rgba(139,90,43,0.12));
+    border-color: rgba(212, 168, 67, 0.45);
+}
+
+.pause-action-btn.danger {
+    color: var(--lose-color);
+    border-color: rgba(198, 40, 40, 0.15);
+}
+
+.pause-action-btn.danger:hover {
+    background: rgba(198, 40, 40, 0.08);
+    border-color: rgba(198, 40, 40, 0.3);
+}
+
+.pause-action-btn span:first-child {
+    font-size: 1.3rem;
+    width: 28px;
+    text-align: center;
+}
+
+.pause-action-btn > .ui-icon {
+    width: 24px;
+    height: 24px;
+    margin: 0 2px;
+}
+
+/* ========== 对局 HUD ========== */
+.hud-topbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    padding-top: max(10px, env(safe-area-inset-top));
+    background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%);
+    z-index: 20;
+    pointer-events: none;
+}
+
+.hud-topbar > * {
+    pointer-events: auto;
+}
+
+#game-screen .hud-match-info {
+    display: none;
+}
+
+.hud-menu-btn {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hud-bg);
+    border: 1px solid var(--hud-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+}
+
+.hud-menu-btn:hover {
+    border-color: rgba(212, 168, 67, 0.35);
+    color: var(--accent-gold);
+}
+
+.hud-match-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--hud-bg);
+    border: 1px solid var(--hud-border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    backdrop-filter: blur(8px);
+}
+
+.hud-wind {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-gold);
+    color: #1a1a1a;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.hud-round {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.hud-deck-info {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    background: var(--hud-bg);
+    border: 1px solid var(--hud-border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    backdrop-filter: blur(8px);
+}
+
+.hud-deck-count {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    font-variant-numeric: tabular-nums;
+}
+
+.hud-deck-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.turn-timer-display {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--hud-bg);
+    border: 1px solid var(--hud-border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    backdrop-filter: blur(8px);
+    color: var(--text-primary);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    transition: all 0.3s ease;
+}
+
+.turn-timer-display.hidden {
+    display: none;
+}
+
+.turn-timer-display.urgent {
+    border-color: rgba(244, 67, 54, 0.5);
+    background: rgba(244, 67, 54, 0.15);
+    color: #ff5252;
+    animation: timerPulse 1s ease-in-out infinite;
+}
+
+.turn-timer-icon {
+    font-size: 0.85rem;
+}
+
+.turn-timer-value {
+    font-size: 1rem;
+    color: var(--accent-gold);
+    min-width: 20px;
+    text-align: center;
+}
+
+.turn-timer-display.urgent .turn-timer-value {
+    color: #ff5252;
+}
+
+/* 动作反馈 */
+.action-feedback {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 30;
+    pointer-events: none;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent-gold);
+    text-shadow: 0 0 40px rgba(212, 168, 67, 0.6);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.action-feedback.show {
+    opacity: 1;
+    animation: actionFeedbackPop calc(0.8s * var(--anim-speed, 1)) ease forwards;
+}
+
+@keyframes actionFeedbackPop {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    30% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    60% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* 牌桌布局调整 */
+#game-screen .game-table {
+    display: grid;
+    grid-template-areas:
+        ". top ."
+        "left center right"
+        ". bottom .";
+    grid-template-columns: clamp(92px, 8vw, 132px) minmax(0, 1fr) clamp(92px, 8vw, 132px);
+    grid-template-rows: clamp(116px, 14vh, 144px) minmax(0, 1fr) clamp(158px, 23vh, 220px);
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    gap: 8px;
+    padding: max(56px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom)) 14px;
+    box-sizing: border-box;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+        radial-gradient(ellipse at center, rgba(255, 255, 255, 0.045), transparent 58%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.025), rgba(0, 0, 0, 0.08));
+}
+
+#game-screen .game-table::before {
+    content: '';
+    position: absolute;
+    inset: max(52px, env(safe-area-inset-top)) 6px 8px;
+    z-index: 0;
+    border: 1px solid rgba(232, 200, 112, 0.18);
+    border-radius: 34px;
+    background:
+        linear-gradient(90deg, transparent 49.8%, rgba(255, 255, 255, 0.025) 50%, transparent 50.2%),
+        linear-gradient(0deg, transparent 49.8%, rgba(255, 255, 255, 0.025) 50%, transparent 50.2%);
+    box-shadow:
+        inset 0 0 60px rgba(0, 0, 0, 0.16),
+        0 12px 40px rgba(0, 0, 0, 0.16);
+    pointer-events: none;
+}
+
+/* 玩家区域 */
+.player-area {
+    position: relative !important;
+    inset: auto !important;
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: visible;
+    z-index: 5;
+    transform: none !important;
+}
+
+.player-area.top {
+    grid-area: top;
+    align-self: stretch;
+    justify-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+}
+
+.player-area.left {
+    grid-area: left;
+    align-self: stretch;
+    justify-self: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.player-area.right {
+    grid-area: right;
+    align-self: stretch;
+    justify-self: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.player-area.bottom {
+    grid-area: bottom;
+    align-self: end;
+    justify-self: stretch;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    overflow: hidden;
+}
+
+.player-info {
+    position: relative;
+    padding: 6px 12px 6px 7px;
+    background: linear-gradient(135deg, rgba(10, 24, 18, 0.94), rgba(18, 18, 24, 0.9));
+    border: 1px solid rgba(232, 200, 112, 0.18);
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    gap: 8px;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.22);
+}
+
+#game-screen .player-avatar {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 50%;
+    background: linear-gradient(145deg, rgba(232, 200, 112, 0.28), rgba(212, 168, 67, 0.08));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+#game-screen .player-avatar .ui-icon {
+    width: 17px;
+    height: 17px;
+    color: #f4d783;
+}
+
+#game-screen #player-bottom .player-info .shanten-hud {
+    position: static;
+    min-width: max-content;
+    padding: 2px 7px;
+    transform: none;
+    background: rgba(212, 168, 67, 0.08);
+    box-shadow: none;
+    font-size: 0.72rem;
+}
+
+.player-area.current-turn .player-info {
+    box-shadow: 0 0 0 2px rgba(244, 205, 93, 0.2), 0 0 24px rgba(244, 205, 93, 0.34);
+    border-color: rgba(244, 205, 93, 0.72);
+}
+
+.player-score {
+    font-variant-numeric: tabular-nums;
+    min-width: 40px;
+    text-align: right;
+}
+
+.player-area.top .hand-area,
+.player-area.bottom .hand-area {
+    max-width: 100%;
+    min-width: 0;
+    justify-content: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+}
+
+.player-area.top .hand-area::-webkit-scrollbar,
+.player-area.bottom .hand-area::-webkit-scrollbar {
+    display: none;
+}
+
+/* 覆盖 game.css 的大屏固定牌高，避免 720p 窗口中对家手牌挤出顶部区域。 */
+#game-screen .player-area.top .mahjong-tile,
+#game-screen .player-area.top .mahjong-tile.back {
+    min-width: 0;
+    min-height: 0;
+    width: clamp(34px, 3.5vw, 48px);
+    height: clamp(46px, 7vh, 64px);
+}
+
+.player-area.left .hand-area,
+.player-area.right .hand-area {
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    max-height: calc(100% - 38px);
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+.melds-area:empty {
+    display: none;
+}
+
+.player-area.left .melds-area,
+.player-area.right .melds-area {
+    max-height: 30%;
+    overflow: hidden;
+}
+
+#game-screen .player-area.left .player-info,
+#game-screen .player-area.right .player-info {
+    display: grid;
+    grid-template-columns: 27px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    width: 100%;
+    max-width: 100%;
+    padding: 5px 6px;
+    gap: 3px;
+    align-items: center;
+}
+
+#game-screen .player-area.left .player-avatar,
+#game-screen .player-area.right .player-avatar {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    display: flex;
+    width: 27px;
+    height: 27px;
+}
+
+#game-screen .player-area.left .player-name,
+#game-screen .player-area.right .player-name {
+    grid-column: 2;
+    max-width: 100%;
+    font-size: clamp(0.64rem, 1vw, 0.8rem);
+}
+
+#game-screen .player-area.left .player-score,
+#game-screen .player-area.right .player-score {
+    grid-column: 2;
+    min-width: 0;
+    text-align: left;
+    font-size: 0.72rem;
+    line-height: 1;
+}
+
+#game-screen .player-area.left .mahjong-tile,
+#game-screen .player-area.right .mahjong-tile,
+#game-screen .player-area.left .mahjong-tile.back,
+#game-screen .player-area.right .mahjong-tile.back {
+    min-width: 0;
+    min-height: 0;
+    width: clamp(22px, 2.4vw, 32px);
+    height: clamp(26px, 2.8vh, 32px);
+    border-radius: 7px;
+}
+
+#game-screen .player-area.left .mahjong-tile .tile-face,
+#game-screen .player-area.right .mahjong-tile .tile-face {
+    font-size: clamp(1rem, 1.8vw, 1.45rem);
+}
+
+/* 侧家最多会短暂持有 14 张；轻微叠放可确保 720p 窗口也完整显示。 */
+#game-screen .player-area.left .hand-area .mahjong-tile + .mahjong-tile,
+#game-screen .player-area.right .hand-area .mahjong-tile + .mahjong-tile {
+    margin-top: -5px;
+}
+
+#game-screen .table-center {
+    position: relative;
+    inset: auto;
+    grid-area: center;
+    align-self: stretch;
+    justify-self: stretch;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    transform: none !important;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    align-items: center;
+    justify-items: center;
+    gap: 8px;
+    padding: 12px 18px 10px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at center, rgba(5, 24, 15, 0.12), rgba(0, 0, 0, 0.08)),
+        repeating-linear-gradient(0deg, transparent 0 31px, rgba(255, 255, 255, 0.018) 31px 32px),
+        repeating-linear-gradient(90deg, transparent 0 31px, rgba(255, 255, 255, 0.018) 31px 32px);
+    border: 1px solid rgba(232, 200, 112, 0.12);
+    border-radius: 28px;
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.13);
+}
+
+.table-status-core {
+    grid-row: 1;
+    min-width: 122px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 4px 13px 4px 5px;
+    color: #f5e7bb;
+    background: linear-gradient(180deg, rgba(10, 26, 19, 0.96), rgba(7, 17, 13, 0.94));
+    border: 1px solid rgba(232, 200, 112, 0.34);
+    border-radius: 999px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    font-variant-numeric: tabular-nums;
+}
+
+.table-wind-mark {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #2a210d;
+    background: linear-gradient(145deg, #f3d878, #c99932);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    font-weight: 900;
+}
+
+.table-round-mark {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.turn-guidance {
+    grid-row: 2;
+    max-width: min(100%, 360px);
+    min-height: 32px;
+    padding: 7px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(7, 20, 14, 0.9);
+    border: 1px solid rgba(232, 200, 112, 0.24);
+    border-radius: 999px;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+}
+
+.turn-guidance[data-state="active"] {
+    border-color: rgba(212, 168, 67, 0.38);
+    color: var(--accent-gold);
+}
+
+.turn-guidance[data-state="action"] {
+    border-color: rgba(120, 220, 150, 0.42);
+    color: #a9e9bb;
+}
+
+.turn-guidance[data-state="thinking"] {
+    border-color: rgba(105, 178, 255, 0.38);
+    color: #b9dbff;
+}
+
+#game-screen .game-table.three-player {
+    grid-template-areas:
+        ". . ."
+        "left center right"
+        ". bottom .";
+    grid-template-columns: clamp(84px, 7vw, 116px) minmax(0, 1fr) clamp(84px, 7vw, 116px);
+    grid-template-rows: clamp(40px, 7vh, 64px) minmax(0, 1fr) clamp(158px, 23vh, 220px);
+}
+
+/* 回合指示器 */
+.turn-indicator {
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--accent-gold);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s;
+    box-shadow: 0 0 8px rgba(212, 168, 67, 0.6);
+}
+
+.turn-indicator.active {
+    opacity: 1;
+    animation: turnDotPulse 1.5s ease infinite;
+}
+
+@keyframes turnDotPulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+    50% { transform: translateX(-50%) scale(1.4); opacity: 0.7; }
+}
+
+/* 3人模式：已由 game.css grid 布局统一处理 */
+.game-table.three-player .player-area.top {
+    display: none !important;
+}
+
+/* 弃牌堆 */
+.discard-pile {
+    grid-row: 3;
+    width: min(68vw, 760px);
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(32px, 38px));
+    grid-auto-rows: min-content;
+    align-content: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 9px;
+    background: rgba(4, 18, 11, 0.1);
+    border: 1px dashed rgba(232, 200, 112, 0.12);
+    border-radius: 18px;
+}
+
+/* 动作按钮栏 */
+.action-bar {
+    position: absolute;
+    bottom: clamp(190px, 27vh, 250px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 15;
+    padding: 7px;
+    padding-bottom: 7px !important;
+    background: rgba(7, 18, 13, 0.86);
+    border: 1px solid rgba(232, 200, 112, 0.2);
+    border-radius: 999px;
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(-50%, 8px);
+    transition: none;
+    animation: none;
+}
+
+.action-bar.has-actions {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%);
+}
+
+.action-bar.has-actions .action-btn:disabled {
+    display: none;
+}
+
+.action-bar .action-btn:not(:disabled) {
+    animation: none;
+    opacity: 1;
+    filter: none;
+}
+
+.action-btn {
+    min-width: 52px;
+    height: 52px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #f0cf67, #b77d20);
+    border: 1px solid rgba(255, 239, 173, 0.68);
+    border-radius: 999px;
+    color: #2f2107;
+    font-size: 1.05rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.48);
+}
+
+.action-btn:not(:disabled) {
+    background: linear-gradient(145deg, #f0cf67, #b77d20);
+}
+
+.action-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, #ffe490, #cb9330);
+    border-color: rgba(255, 245, 203, 0.88);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .action-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+    }
+}
+
+.action-btn:active:not(:disabled) {
+    transform: translateY(0) scale(0.94);
+    transition: transform 0.05s ease;
+}
+
+.action-btn:focus-visible:not(:disabled) {
+    outline: 2px solid var(--accent-gold);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.25);
+}
+
+.action-btn:not(:disabled)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    background: radial-gradient(circle at center, rgba(212,168,67,0.25) 0%, transparent 70%);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.action-btn:not(:disabled):hover::after {
+    opacity: 1;
+}
+
+.action-btn.highlight:not(:disabled) {
+    animation: btnPulse 2s ease-in-out infinite;
+}
+
+@keyframes btnPulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(212, 168, 67, 0.2); }
+    50% { box-shadow: 0 0 24px rgba(212, 168, 67, 0.4); }
+}
+
+.action-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    filter: grayscale(0.6);
+}
+
+.action-btn.secondary {
+    background: linear-gradient(145deg, #445149, #26332c);
+    border-color: rgba(255,255,255,0.16);
+    color: #e2e7df;
+    font-weight: 700;
+}
+
+.action-btn.secondary:hover:not(:disabled) {
+    background: linear-gradient(145deg, #56645b, #324138);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fffdf5;
+}
+
+.action-btn.highlight {
+    background: linear-gradient(145deg, #f36c48, #a92c24);
+    border-color: rgba(255, 204, 155, 0.72);
+    color: #fff5df;
+    box-shadow: 0 6px 20px rgba(145, 36, 26, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.action-btn.highlight:hover:not(:disabled) {
+    background: linear-gradient(145deg, #ff8060, #c43a2e);
+    border-color: rgba(255, 225, 190, 0.9);
+    box-shadow: 0 8px 24px rgba(145, 36, 26, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+/* 移除旧的游戏控制栏 */
+.game-controls {
+    display: none !important;
+}
+
+/* ========== 结算页 ========== */
+#game-result.screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--bg-primary);
+    overflow-y: auto;
+}
+
+.result-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(212,168,67,0.06) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.result-content {
+    position: relative;
+    z-index: 2;
+    max-width: 440px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.result-header {
+    text-align: center;
+    padding: 20px 0 8px;
+}
+
+.result-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-gold);
+    margin-bottom: 8px;
+    filter: drop-shadow(0 4px 16px rgba(212, 168, 67, 0.3));
+}
+
+.result-icon .ui-icon {
+    width: 64px;
+    height: 64px;
+    stroke-width: 1.5;
+}
+
+.result-p-avatar .ui-icon {
+    width: 22px;
+    height: 22px;
+    color: var(--text-secondary);
+}
+
+.stats-card > h3 .ui-icon {
+    color: var(--accent-gold);
+}
+
+.result-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.result-title.win {
+    color: var(--accent-gold);
+}
+
+.result-title.lose {
+    color: var(--lose-color);
+}
+
+.result-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 6px 0 0;
+}
+
+/* 结算玩家列表 */
+.result-players {
+    background: var(--bg-panel);
+    border: 1px solid var(--hud-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.result-player-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.result-player-row:last-child {
+    border-bottom: none;
+}
+
+.result-player-row.winner {
+    background: linear-gradient(90deg, rgba(212,168,67,0.06), transparent);
+}
+
+.result-rank {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.result-rank.gold {
+    background: linear-gradient(135deg, #FFD700, #FFA000);
+    color: #1a1a1a;
+}
+
+.result-rank.silver {
+    background: linear-gradient(135deg, #C0C0C0, #808080);
+    color: #1a1a1a;
+}
+
+.result-rank.bronze {
+    background: linear-gradient(135deg, #CD7F32, #8B4513);
+    color: #1a1a1a;
+}
+
+.result-rank.normal {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-muted);
+}
+
+.result-p-avatar {
+    font-size: 1.4rem;
+}
+
+.result-p-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.result-p-score {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-size: 1rem;
+}
+
+.result-p-score.positive {
+    color: var(--win-color);
+}
+
+.result-p-score.negative {
+    color: var(--lose-color);
+}
+
+/* 结算奖励 */
+.result-rewards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.result-reward-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(212, 168, 67, 0.08);
+    border: 1px solid rgba(212, 168, 67, 0.15);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--accent-gold);
+    animation: rewardPop 0.4s ease backwards;
+}
+
+@keyframes rewardPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* 结算操作按钮 */
+.result-actions {
+    display: flex;
+    gap: 10px;
+    padding-top: 8px;
+}
+
+.result-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.result-btn.primary {
+    background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+    color: #1a1a1a;
+}
+
+.result-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(212, 168, 67, 0.3);
+}
+
+.result-btn.secondary {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-secondary);
+}
+
+.result-btn.secondary:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.18);
+}
+
+/* ========== Modal 覆盖层 ========== */
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 250;
+}
+
+.modal.hidden {
+    display: none !important;
+}
+
+.modal:not(.hidden) {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 250;
+}
+
+.tile-name-label {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    pointer-events: none;
+    line-height: 1;
+}
+
+#game-screen .mahjong-tile:not(.back),
+#replay-player .mahjong-tile:not(.back) {
+    position: relative;
+    background: linear-gradient(180deg, rgb(255, 253, 245) 0%, #f8f2e4 62%, #e8dcc1 100%);
+    border-color: var(--tile-edge);
+    color: #234f39;
+    box-shadow:
+        0 5px 0 #9f8e67,
+        0 8px 14px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    filter: none;
+}
+
+#game-screen .mahjong-tile:not(.back) .tile-face,
+#replay-player .mahjong-tile:not(.back) .tile-face {
+    filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.82));
+    text-shadow: none;
+}
+
+#game-screen .mahjong-tile.suit-wan,
+#replay-player .mahjong-tile.suit-wan,
+#game-screen .mahjong-tile.suit-jian,
+#replay-player .mahjong-tile.suit-jian {
+    color: #a72e27;
+}
+
+#game-screen .mahjong-tile.suit-tong,
+#replay-player .mahjong-tile.suit-tong {
+    color: #147547;
+}
+
+#game-screen .mahjong-tile.suit-tiao,
+#replay-player .mahjong-tile.suit-tiao {
+    color: #1d5792;
+}
+
+#game-screen .mahjong-tile.suit-feng,
+#replay-player .mahjong-tile.suit-feng {
+    color: #293e58;
+}
+
+#game-screen .mahjong-tile.suit-hua,
+#replay-player .mahjong-tile.suit-hua {
+    color: #8e3d75;
+}
+
+#game-screen .mahjong-tile:not(.back)::after,
+#replay-player .mahjong-tile:not(.back)::after {
+    left: 3%;
+    width: 94%;
+    height: 18%;
+    background: linear-gradient(180deg, transparent, rgba(114, 94, 54, 0.13));
+}
+
+#game-screen .mahjong-tile.back,
+#replay-player .mahjong-tile.back {
+    background: linear-gradient(155deg, #267f78 0%, #155a60 58%, #0c3e49 100%);
+    border-color: #7ab3a5;
+    box-shadow:
+        0 4px 0 #d3c69f,
+        0 7px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+#game-screen .mahjong-tile.back::before,
+#replay-player .mahjong-tile.back::before {
+    inset: 4px;
+    background:
+        radial-gradient(circle at center, transparent 0 34%, rgba(224, 247, 235, 0.16) 35% 40%, transparent 41%),
+        repeating-linear-gradient(45deg, transparent 0 4px, rgba(255, 255, 255, 0.08) 4px 5px);
+    border: 1px solid rgba(226, 248, 238, 0.18);
+}
+
+#game-screen .mahjong-tile.selected {
+    transform: translateY(-14px) scale(1.04);
+    border-color: #f2c94c;
+    box-shadow:
+        0 0 0 3px rgba(242, 201, 76, 0.92),
+        0 8px 0 #9f8e67,
+        0 15px 22px rgba(0, 0, 0, 0.38);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    #game-screen .mahjong-tile:not(.back):hover {
+        transform: translateY(-7px) scale(1.025);
+        border-color: #ddba55;
+        box-shadow:
+            0 7px 0 #9f8e67,
+            0 13px 20px rgba(0, 0, 0, 0.34),
+            0 0 0 2px rgba(242, 201, 76, 0.42);
+        filter: brightness(1.03);
+    }
+}
+
+#game-screen #hand-bottom .mahjong-tile.disabled {
+    opacity: 0.72;
+    filter: saturate(0.72) brightness(0.92);
+}
+
+#game-screen .discard-pile .mahjong-tile,
+#game-screen .discard-pile .mahjong-tile.tile-small {
+    min-width: 0;
+    min-height: 0;
+    width: 34px;
+    height: 46px;
+    border-radius: 5px;
+}
+
+#game-screen .discard-pile .mahjong-tile .tile-face {
+    font-size: 1.45rem;
+}
+
+/* Toggle Switch */
+.toggle-row {
+    justify-content: space-between;
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 24px;
+    transition: 0.2s;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background: var(--text-secondary);
+    border-radius: 50%;
+    transition: 0.2s;
+}
+.toggle-switch input:checked + .toggle-slider {
+    background: rgba(212,168,67,0.25);
+    border-color: rgba(212,168,67,0.4);
+}
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+    background: var(--accent-gold);
+}
+.toggle-switch input:focus + .toggle-slider {
+    box-shadow: 0 0 0 2px rgba(212,168,67,0.2);
+}
+
+/* ========== 移动端适配 ========== */
+@media (max-width: 560px) {
+    .menu-hero {
+        padding: 16px 16px 10px;
+    }
+    .menu-title {
+        font-size: 1.4rem;
+        letter-spacing: 2px;
+    }
+    .menu-body {
+        padding: 24px 14px 0;
+        gap: 12px;
+    }
+    .menu-btn.primary {
+        padding: 14px 16px;
+    }
+    .menu-btn.primary .btn-icon {
+        width: 38px;
+        height: 38px;
+    }
+    .menu-btn.primary .btn-text {
+        font-size: 1rem;
+    }
+    .menu-secondary-actions {
+        gap: 8px;
+    }
+    .menu-btn.compact {
+        padding: 10px 4px;
+    }
+
+    .settings-panel {
+        width: calc(100vw - 24px);
+        max-height: calc(100vh - 24px);
+    }
+    .setting-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .setting-row input,
+    .setting-row select {
+        width: 100%;
+        min-width: 0;
+    }
+    .setting-row.slider-row {
+        display: grid;
+        grid-template-columns: minmax(64px, auto) 1fr auto;
+        align-items: center;
+        gap: 8px;
+    }
+    .setting-row.slider-row label {
+        grid-column: 1;
+    }
+    .setting-row.slider-row input[type="range"] {
+        grid-column: 2;
+        width: 100%;
+    }
+    .setting-row.slider-row .slider-value {
+        grid-column: 3;
+        min-width: 42px;
+        text-align: right;
+    }
+    .toggle-row {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    /* HUD 移动端 */
+    .hud-topbar {
+        padding: 8px 10px;
+    }
+    .hud-match-info {
+        padding: 4px 12px;
+        gap: 8px;
+    }
+    .hud-wind {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+    }
+    .hud-round {
+        font-size: 0.7rem;
+    }
+    .hud-deck-info {
+        padding: 4px 10px;
+    }
+
+    /* 动作按钮移动端 */
+    .action-bar {
+        gap: 6px;
+        padding: 4px;
+        padding-bottom: 4px !important;
+        bottom: 176px;
+    }
+    .action-btn {
+        min-width: 48px;
+        height: 46px;
+        padding: 0 12px;
+        font-size: 0.9rem;
+    }
+
+    /* 玩家信息移动端 */
+    .player-info {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        gap: 6px;
+    }
+    .player-avatar {
+        font-size: 1rem;
+    }
+
+    #game-screen .player-area.left .player-info,
+    #game-screen .player-area.right .player-info {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr);
+        grid-template-rows: 1fr 1fr;
+        column-gap: 3px;
+        padding: 3px;
+        line-height: 1;
+    }
+    #game-screen .player-area.left .player-avatar,
+    #game-screen .player-area.right .player-avatar {
+        grid-row: 1 / 3;
+        width: 24px;
+        height: 24px;
+    }
+    #game-screen .player-area.left .player-name,
+    #game-screen .player-area.right .player-name,
+    #game-screen .player-area.left .player-score,
+    #game-screen .player-area.right .player-score {
+        min-width: 0;
+        max-width: 100%;
+        text-align: left;
+        font-size: 0.62rem;
+        line-height: 1.05;
+    }
+    .player-score {
+        min-width: 32px;
+        font-size: 0.8rem;
+    }
+
+    /* 弃牌堆移动端 */
+    .discard-pile {
+        width: 100%;
+        height: 100%;
+        grid-template-columns: repeat(auto-fit, minmax(26px, 30px));
+        padding: 6px;
+        gap: 3px;
+    }
+
+    #game-screen .table-center {
+        gap: 6px;
+        padding: 8px 6px 7px;
+        border-radius: 20px;
+    }
+
+    .table-status-core {
+        min-width: 104px;
+        height: 34px;
+        padding: 3px 10px 3px 4px;
+        gap: 7px;
+    }
+
+    .table-wind-mark {
+        width: 26px;
+        height: 26px;
+        font-size: 0.78rem;
+    }
+
+    .table-round-mark {
+        font-size: 0.68rem;
+    }
+
+    #game-screen .discard-pile .mahjong-tile,
+    #game-screen .discard-pile .mahjong-tile.tile-small {
+        width: 27px;
+        height: 37px;
+    }
+
+    #game-screen .discard-pile .mahjong-tile .tile-face {
+        font-size: 1.1rem;
+    }
+
+    #game-screen .game-table {
+        grid-template-areas:
+            "top top top"
+            "left center right"
+            "bottom bottom bottom";
+        grid-template-columns: 70px minmax(0, 1fr) 70px;
+        grid-template-rows: 112px minmax(0, 1fr) 170px;
+        gap: 4px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    #game-screen .game-table.three-player {
+        grid-template-areas:
+            ". . ."
+            "left center right"
+            "bottom bottom bottom";
+        grid-template-columns: 66px minmax(0, 1fr) 66px;
+        grid-template-rows: 40px minmax(0, 1fr) 170px;
+    }
+    #game-screen .player-area.top .hand-area .mahjong-tile + .mahjong-tile {
+        margin-left: -10px;
+    }
+    #game-screen .player-area.bottom .hand-area {
+        justify-content: flex-start;
+        gap: 0;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    /*
+     * 竖屏下完整展示本家手牌。普通麻将最多 14 张，台湾麻将最多 17 张；
+     * 采用轻度叠放保留可辨识牌面，避免依赖没有可见提示的横向滚动。
+     */
+    #game-screen .player-area.bottom .hand-area .mahjong-tile {
+        min-width: 0;
+        min-height: 0;
+        width: clamp(28px, 9vw, 34px);
+        height: clamp(48px, 9vh, 60px);
+        border-radius: 5px;
+    }
+    #game-screen .player-area.bottom .hand-area .mahjong-tile .tile-face {
+        font-size: clamp(1.2rem, 5vw, 1.7rem);
+    }
+    #game-screen .player-area.bottom .hand-area .mahjong-tile + .mahjong-tile {
+        margin-left: -11px;
+    }
+    #game-screen .player-area.bottom .hand-area[data-tile-count="15"] .mahjong-tile + .mahjong-tile {
+        margin-left: -13px;
+    }
+    #game-screen .player-area.bottom .hand-area[data-tile-count="16"] .mahjong-tile + .mahjong-tile {
+        margin-left: -15px;
+    }
+    #game-screen .player-area.bottom .hand-area[data-tile-count="17"] .mahjong-tile + .mahjong-tile {
+        margin-left: -16px;
+    }
+    #game-screen .player-area.bottom .hand-area[data-tile-count="18"] .mahjong-tile + .mahjong-tile {
+        margin-left: -17px;
+    }
+    .turn-guidance {
+        min-height: 28px;
+        padding: 5px 10px;
+        font-size: 0.72rem;
+    }
+    #game-screen .player-area.left .mahjong-tile,
+    #game-screen .player-area.right .mahjong-tile,
+    #game-screen .player-area.left .mahjong-tile.back,
+    #game-screen .player-area.right .mahjong-tile.back {
+        width: 30px;
+        height: clamp(26px, 4vh, 34px);
+    }
+    #game-screen .player-area.left .hand-area .mahjong-tile + .mahjong-tile,
+    #game-screen .player-area.right .hand-area .mahjong-tile + .mahjong-tile {
+        margin-top: -8px;
+    }
+
+    /* 结算页移动端 */
+    .result-icon .ui-icon {
+        width: 48px;
+        height: 48px;
+    }
+    .result-title {
+        font-size: 1.4rem;
+    }
+    .result-player-row {
+        padding: 10px 12px;
+    }
+    .result-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 390px) and (max-height: 700px) {
+    #game-screen .player-area.left .hand-area .mahjong-tile + .mahjong-tile,
+    #game-screen .player-area.right .hand-area .mahjong-tile + .mahjong-tile {
+        margin-top: -9px;
+    }
+}
+
+@media (max-width: 560px) and (min-height: 780px) {
+    .menu-footer {
+        margin-bottom: clamp(32px, 6vh, 52px);
+    }
+}
+
+/* 对局提示放到牌桌信息区，避免覆盖本家手牌、向听数和底部触控区。 */
+#game-screen.active ~ #toast-container {
+    top: 45%;
+    bottom: auto;
+}
+
+/* 中等宽度窗口按可用桌宽收紧本家牌，避免 1280×720 等常见笔记本分辨率出现隐性横滚。 */
+@media (min-width: 561px) and (max-width: 1350px) and (min-height: 561px) {
+    #game-screen .player-area.bottom .hand-area .mahjong-tile {
+        min-width: 0;
+        width: clamp(48px, 5vw, 68px);
+        height: clamp(72px, 13.5vh, 92px);
+    }
+}
+
+@media (min-width: 561px) and (max-width: 900px) {
+    #game-screen .game-table {
+        grid-template-areas:
+            ". top ."
+            "left center right"
+            "bottom bottom bottom";
+    }
+}
+
+@media (max-height: 640px) {
+    #main-menu.screen {
+        display: grid;
+        grid-template-columns: minmax(190px, 0.7fr) minmax(0, 1.3fr);
+        grid-template-rows: minmax(0, 1fr) auto;
+        align-items: center;
+    }
+
+    .menu-hero {
+        grid-column: 1;
+        grid-row: 1;
+        padding: 12px 16px;
+    }
+
+    .menu-logo img {
+        width: 40px;
+        height: auto;
+        margin-bottom: 4px;
+    }
+
+    .menu-brand {
+        margin-bottom: 0;
+    }
+
+    .menu-title {
+        font-size: 1.3rem;
+    }
+
+    .menu-tagline {
+        margin-top: 2px;
+        font-size: 0.68rem;
+    }
+
+    .menu-player-badge {
+        display: none;
+    }
+
+    .menu-body {
+        grid-column: 2;
+        grid-row: 1;
+        gap: 8px;
+        justify-content: center;
+        padding: 8px 16px;
+    }
+
+    .menu-btn.primary {
+        padding: 9px 14px;
+    }
+
+    .menu-secondary-actions {
+        max-width: 400px;
+    }
+
+    .menu-btn.compact {
+        padding: 6px 4px;
+    }
+
+    .menu-footer {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        padding: 4px 16px max(6px, env(safe-area-inset-bottom));
+    }
+}
+
+/* 横屏手机和低高度窗口：压缩牌桌纵向占用，并用叠放牌背保留完整手牌数量。 */
+@media (max-height: 560px) and (orientation: landscape) {
+    #game-screen .game-table,
+    #game-screen .game-table.three-player {
+        grid-template-columns: 76px minmax(0, 1fr) 76px;
+        grid-template-rows: 72px minmax(0, 1fr) 108px;
+        gap: 4px;
+        padding: 52px 8px 8px;
+    }
+
+    #game-screen .game-table.three-player {
+        grid-template-rows: 16px minmax(0, 1fr) 108px;
+    }
+
+    #game-screen .player-area.top .player-info {
+        padding: 3px 8px;
+    }
+
+    #game-screen .player-area.top .player-avatar {
+        display: none;
+    }
+
+    #game-screen .player-area.top .hand-area {
+        padding: 2px;
+        gap: 1px;
+    }
+
+    #game-screen .player-area.top .mahjong-tile,
+    #game-screen .player-area.top .mahjong-tile.back {
+        min-width: 0;
+        min-height: 0;
+        width: 28px;
+        height: 38px;
+        border-radius: 5px;
+    }
+
+    #game-screen .player-area.left .player-info,
+    #game-screen .player-area.right .player-info {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        flex-direction: column;
+        min-height: 34px;
+        padding: 2px 4px;
+        gap: 0;
+        line-height: 1.05;
+    }
+
+    #game-screen .player-area.left .player-avatar,
+    #game-screen .player-area.right .player-avatar {
+        display: none;
+    }
+
+    #game-screen .player-area.left .player-name,
+    #game-screen .player-area.right .player-name {
+        grid-column: 1;
+        max-width: 66px;
+        font-size: 0.65rem;
+    }
+
+    #game-screen .player-area.left .player-score,
+    #game-screen .player-area.right .player-score {
+        grid-column: 1;
+        min-width: 0;
+        text-align: center;
+        font-size: 0.7rem;
+    }
+
+    #game-screen .player-area.left .hand-area,
+    #game-screen .player-area.right .hand-area {
+        max-height: calc(100% - 34px);
+        padding: 2px;
+        gap: 0;
+        overflow: hidden;
+    }
+
+    #game-screen .player-area.left .hand-area .mahjong-tile,
+    #game-screen .player-area.right .hand-area .mahjong-tile {
+        min-width: 0;
+        min-height: 0;
+        width: 24px;
+        height: 26px;
+        border-radius: 4px;
+    }
+
+    #game-screen .player-area.left .hand-area .mahjong-tile + .mahjong-tile,
+    #game-screen .player-area.right .hand-area .mahjong-tile + .mahjong-tile {
+        margin-top: -21px;
+    }
+
+    #game-screen .player-area.bottom .player-info {
+        padding: 3px 8px;
+    }
+
+    #game-screen .player-area.bottom .hand-area {
+        padding: 2px 2px 4px;
+        gap: 0;
+    }
+
+    #game-screen .player-area.bottom .mahjong-tile {
+        min-width: 0;
+        width: 36px;
+        height: 58px;
+        border-radius: 6px;
+    }
+
+    #game-screen .player-area.bottom .hand-area .mahjong-tile + .mahjong-tile {
+        margin-left: -4px;
+    }
+
+    #game-screen .player-area.bottom .hand-area[data-tile-count="15"] .mahjong-tile + .mahjong-tile,
+    #game-screen .player-area.bottom .hand-area[data-tile-count="16"] .mahjong-tile + .mahjong-tile,
+    #game-screen .player-area.bottom .hand-area[data-tile-count="17"] .mahjong-tile + .mahjong-tile,
+    #game-screen .player-area.bottom .hand-area[data-tile-count="18"] .mahjong-tile + .mahjong-tile {
+        margin-left: -8px;
+    }
+
+    #game-screen .player-area.bottom .mahjong-tile .tile-face {
+        font-size: 1.7rem;
+    }
+
+    .turn-guidance {
+        min-height: 26px;
+        padding: 3px 9px;
+        font-size: 0.68rem;
+    }
+
+    .action-bar {
+        bottom: 126px;
+        gap: 4px;
+        padding: 4px;
+        padding-bottom: 4px !important;
+    }
+
+    .action-btn {
+        min-width: 44px;
+        height: 44px;
+        padding: 0 10px;
+        font-size: 0.85rem;
+    }
+
+    .discard-pile {
+        height: 100%;
+        grid-template-columns: repeat(auto-fit, minmax(24px, 27px));
+    }
+
+    #game-screen .table-center {
+        gap: 4px;
+        padding: 5px 7px;
+        border-radius: 16px;
+    }
+
+    .table-status-core {
+        min-width: 88px;
+        height: 28px;
+        padding: 2px 8px 2px 3px;
+    }
+
+    .table-wind-mark {
+        width: 22px;
+        height: 22px;
+        font-size: 0.68rem;
+    }
+
+    #game-screen .discard-pile .mahjong-tile,
+    #game-screen .discard-pile .mahjong-tile.tile-small {
+        width: 24px;
+        height: 31px;
+    }
+
+    #game-screen .discard-pile .mahjong-tile .tile-face {
+        font-size: 0.92rem;
+    }
+}
+
+/* 回放牌张必须覆盖 game.css 中后声明的通用桌面尺寸。 */
+#replay-player .replay-hand .mahjong-tile,
+#replay-player .replay-hand .mahjong-tile.tile-small {
+    min-width: 0;
+    min-height: 0;
+    width: 28px;
+    height: 40px;
+}
+
+#replay-player .replay-melds .mahjong-tile,
+#replay-player .replay-melds .mahjong-tile.tile-small,
+#replay-player .replay-discard-pile .mahjong-tile,
+#replay-player .replay-discard-pile .mahjong-tile.tile-small {
+    min-width: 0;
+    min-height: 0;
+    width: 24px;
+    height: 34px;
+}
+
+#replay-player .replay-hand .mahjong-tile .tile-face,
+#replay-player .replay-melds .mahjong-tile .tile-face,
+#replay-player .replay-discard-pile .mahjong-tile .tile-face {
+    font-size: 1.05rem;
+}
+
+@media (max-width: 768px) and (min-height: 601px) {
+    #replay-player .replay-hand {
+        max-width: none;
+        flex-wrap: nowrap;
+        gap: 1px;
+    }
+
+    #replay-player .replay-hand .mahjong-tile,
+    #replay-player .replay-hand .mahjong-tile.tile-small {
+        width: 17px;
+        height: 24px;
+        border-radius: 3px;
+    }
+
+    #replay-player .replay-hand .mahjong-tile .tile-face {
+        font-size: 0.68rem;
+    }
+}
+
+@media (max-width: 560px) and (min-height: 601px) {
+    #replay-player .replay-player-area.left,
+    #replay-player .replay-player-area.right {
+        top: 50%;
+        transform: translateY(-50%);
+        gap: 3px;
+    }
+
+    #replay-player .replay-player-area.left {
+        left: 6px;
+    }
+
+    #replay-player .replay-player-area.right {
+        right: 6px;
+    }
+
+    #replay-player .replay-player-area.left .replay-player-info,
+    #replay-player .replay-player-area.right .replay-player-info {
+        max-width: 72px;
+        gap: 3px;
+        padding: 3px 5px;
+        overflow: hidden;
+    }
+
+    #replay-player .replay-player-area.left .replay-p-avatar,
+    #replay-player .replay-player-area.right .replay-p-avatar {
+        display: none;
+    }
+
+    #replay-player .replay-player-area.left .replay-p-name,
+    #replay-player .replay-player-area.right .replay-p-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #replay-player .replay-player-area.left .replay-hand,
+    #replay-player .replay-player-area.right .replay-hand,
+    #replay-player .replay-player-area.left .replay-melds,
+    #replay-player .replay-player-area.right .replay-melds {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 0;
+    }
+
+    #replay-player .replay-player-area.left .replay-hand .mahjong-tile,
+    #replay-player .replay-player-area.right .replay-hand .mahjong-tile {
+        width: 17px;
+        height: 21px;
+    }
+
+    #replay-player .replay-player-area.left .replay-hand .mahjong-tile .tile-face,
+    #replay-player .replay-player-area.right .replay-hand .mahjong-tile .tile-face {
+        font-size: 0.62rem;
+    }
+}
+
+@media (max-height: 600px) {
+    #replay-player .replay-hand .mahjong-tile,
+    #replay-player .replay-hand .mahjong-tile.tile-small {
+        width: 14px;
+        height: 20px;
+        border-radius: 3px;
+    }
+
+    #replay-player .replay-melds .mahjong-tile,
+    #replay-player .replay-melds .mahjong-tile.tile-small,
+    #replay-player .replay-discard-pile .mahjong-tile,
+    #replay-player .replay-discard-pile .mahjong-tile.tile-small {
+        width: 13px;
+        height: 19px;
+        border-radius: 3px;
+    }
+
+    #replay-player .replay-hand .mahjong-tile .tile-face,
+    #replay-player .replay-melds .mahjong-tile .tile-face,
+    #replay-player .replay-discard-pile .mahjong-tile .tile-face {
+        font-size: 0.65rem;
+    }
+}

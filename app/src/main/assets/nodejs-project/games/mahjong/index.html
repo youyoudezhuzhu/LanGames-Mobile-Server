@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1a3a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="万能麻将">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/tiles/red-dragon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/tiles/red-dragon.svg">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' http: https: ws: wss:;">
+    <title>万能麻将 - 中国麻将大全</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/ui-overhaul.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 开场加载 -->
+        <div id="loading-screen" class="loading-screen" role="status" aria-live="polite" aria-label="游戏加载中">
+            <div class="loading-content">
+                <div class="loading-mahjong"><img src="assets/tiles/red-dragon.svg" alt="" width="64" height="76"></div>
+                <div class="loading-title">万能麻将</div>
+                <div class="loading-subtitle">中国境内所有麻将种类</div>
+                <div class="loading-bar" role="progressbar" aria-label="加载进度">
+                    <div class="loading-fill"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主菜单 -->
+        <div id="main-menu" class="screen active">
+            <div class="menu-hero">
+                <div class="menu-brand">
+                    <div class="menu-logo"><img src="assets/tiles/red-dragon.svg" alt="" width="54" height="64"></div>
+                    <h1 class="menu-title">万能麻将</h1>
+                    <p class="menu-tagline">中国境内所有麻将种类</p>
+                </div>
+                <div class="menu-player-badge">
+                    <span class="menu-lv">Lv.<span id="player-level">1</span></span>
+                    <div class="menu-exp-track">
+                        <div class="menu-exp-bar" id="exp-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="menu-exp-text"><span id="current-exp">0</span>/<span id="max-exp">100</span></span>
+                </div>
+            </div>
+
+            <div class="menu-body">
+                <!-- 主操作区 -->
+                <div class="menu-primary-actions">
+                    <button class="menu-btn primary" data-screen="game" data-mode="ai">
+                        <span class="btn-icon"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#play"></use></svg></span>
+                        <div class="btn-text-group">
+                            <span class="btn-text">快速开始</span>
+                            <span class="btn-desc">与 AI 练习牌技</span>
+                        </div>
+                        <span class="btn-arrow">›</span>
+                    </button>
+                    <button class="menu-btn primary" data-screen="network-lobby" data-mode="lan">
+                        <span class="btn-icon"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#network"></use></svg></span>
+                        <div class="btn-text-group">
+                            <span class="btn-text">局域网联机</span>
+                            <span class="btn-desc">同 WiFi 多人对战</span>
+                        </div>
+                        <span class="btn-arrow">›</span>
+                    </button>
+                    <button class="menu-btn primary" data-screen="custom-mode" data-mode="custom">
+                        <span class="btn-icon"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#tune"></use></svg></span>
+                        <div class="btn-text-group">
+                            <span class="btn-text">自定义模式</span>
+                            <span class="btn-desc">选择规则与牌种</span>
+                        </div>
+                        <span class="btn-arrow">›</span>
+                    </button>
+                </div>
+
+                <!-- 次要操作区 -->
+                <div class="menu-secondary-actions">
+                    <button class="menu-btn compact" data-screen="replay-list" data-mode="replay">
+                        <span class="btn-icon"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#film"></use></svg></span>
+                        <span class="btn-text">回放</span>
+                    </button>
+                    <button class="menu-btn compact" data-screen="achievements" data-mode="achievements">
+                        <span class="btn-icon"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#trophy"></use></svg></span>
+                        <span class="btn-text">成就</span>
+                    </button>
+                    <button class="menu-btn compact" data-screen="stats-page" data-mode="stats">
+                        <span class="btn-icon"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#chart"></use></svg></span>
+                        <span class="btn-text">战绩</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 底部工具栏 -->
+            <div class="menu-footer">
+                <button class="menu-tool-btn" id="btn-open-settings" title="设置">
+                    <svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#settings"></use></svg>
+                    <span>设置</span>
+                </button>
+                <button class="menu-tool-btn" id="reset-stats" title="重置记录">
+                    <svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#trash"></use></svg>
+                    <span>重置</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 设置弹窗 -->
+        <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+            <div class="modal-overlay"></div>
+            <div class="modal-panel settings-panel">
+                <div class="modal-panel-header">
+                    <h3 id="settings-title"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#settings"></use></svg>游戏设置</h3>
+                    <button class="modal-close" id="settings-close" title="关闭设置" aria-label="关闭设置"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#close"></use></svg></button>
+                </div>
+                <div class="modal-panel-body">
+                    <div class="settings-group">
+                        <h4>玩家</h4>
+                        <div class="setting-row">
+                            <label for="player-name">名称</label>
+                            <input type="text" id="player-name" value="玩家" maxlength="8">
+                        </div>
+                        <div class="setting-row">
+                            <label for="ai-difficulty">AI 难度</label>
+                            <select id="ai-difficulty" aria-describedby="ai-difficulty-hint">
+                                <option value="easy">简单</option>
+                                <option value="normal" selected>普通</option>
+                                <option value="expert">困难</option>
+                            </select>
+                        </div>
+                        <p class="setting-hint" id="ai-difficulty-hint">均衡牌效，会优先保留有效进张。</p>
+                    </div>
+                    <div class="settings-group">
+                        <h4>牌局</h4>
+                        <div class="setting-row">
+                            <label for="game-rounds">局数</label>
+                            <select id="game-rounds">
+                                <option value="1">1局</option>
+                                <option value="4" selected>4局</option>
+                                <option value="8">8局</option>
+                                <option value="16">16局</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <label for="game-speed">速度</label>
+                            <select id="game-speed">
+                                <option value="slow">慢速</option>
+                                <option value="normal" selected>正常</option>
+                                <option value="fast">快速</option>
+                                <option value="instant">瞬间</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <h4>外观</h4>
+                        <div class="setting-row">
+                            <label for="table-theme">牌桌主题</label>
+                            <select id="table-theme">
+                                <option value="classic-green" selected>经典绿</option>
+                                <option value="dark-blue">深海蓝</option>
+                                <option value="wood">原木色</option>
+                                <option value="red">中国红</option>
+                                <option value="amethyst">紫晶之夜</option>
+                                <option value="ink">墨黑极简</option>
+                                <option value="sunset">日落余晖</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <label for="opponent-display">对手牌显示</label>
+                            <select id="opponent-display">
+                                <option value="hidden">隐藏</option>
+                                <option value="small" selected>小牌堆</option>
+                                <option value="full">完整显示</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <h4>声音</h4>
+                        <div class="setting-row slider-row">
+                            <label for="bgm-volume">背景音乐</label>
+                            <input type="range" id="bgm-volume" min="0" max="100" value="50">
+                            <span class="slider-value" id="bgm-volume-value">50%</span>
+                        </div>
+                        <div class="setting-row slider-row">
+                            <label for="sfx-volume">游戏音效</label>
+                            <input type="range" id="sfx-volume" min="0" max="100" value="50">
+                            <span class="slider-value" id="sfx-volume-value">50%</span>
+                        </div>
+                        <div class="setting-row toggle-row">
+                            <label for="sfx-enabled">音效开关</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="sfx-enabled" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row">
+                            <label for="bgm-style">音乐风格</label>
+                            <select id="bgm-style">
+                                <option value="none" selected>关闭</option>
+                                <option value="calm">悠然</option>
+                                <option value="upbeat">轻快</option>
+                                <option value="zen">禅意</option>
+                            </select>
+                        </div>
+                        <p class="setting-hint" id="audio-settings-status" role="status" aria-live="polite">背景音乐：关闭 · 游戏音效：50%</p>
+                    </div>
+                    <div class="settings-group">
+                        <h4>辅助</h4>
+                        <div class="setting-row toggle-row">
+                            <label for="show-tile-names">显示牌名</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="show-tile-names">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row toggle-row">
+                            <label for="show-shanten">显示向听数</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="show-shanten">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row toggle-row">
+                            <label for="auto-sort">自动理牌</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="auto-sort" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 游戏界面 -->
+        <div id="game-screen" class="screen">
+            <!-- 顶部状态栏 -->
+            <div class="hud-topbar">
+                <button class="hud-menu-btn" id="btn-menu" title="菜单" aria-label="打开游戏菜单">
+                    <svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#menu"></use></svg>
+                </button>
+                <div class="hud-match-info">
+                    <span class="hud-wind" id="wind-indicator">东</span>
+                    <span class="hud-round" id="round-info">第 1 / 4 局</span>
+                </div>
+                <div class="hud-deck-info">
+                    <span class="hud-deck-count" id="deck-count">84</span>
+                    <span class="hud-deck-label">张</span>
+                </div>
+                <div class="turn-timer-display hidden" id="turn-timer-display">
+                    <svg class="ui-icon turn-timer-icon" aria-hidden="true"><use href="assets/ui/icons.svg#clock"></use></svg>
+                    <span class="turn-timer-value" id="turn-timer-value">30</span>
+                </div>
+            </div>
+
+            <!-- 动作反馈浮层 -->
+            <div class="action-feedback" id="action-feedback"></div>
+
+            <div class="game-table" id="game-table">
+                <!-- 顶部玩家（对家）-- 3人模式时隐藏 -->
+                <div class="player-area top" id="player-top">
+                    <div class="player-info">
+                        <div class="player-avatar"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#bot"></use></svg></div>
+                        <div class="player-name">电对</div>
+                        <div class="player-score">1000</div>
+                        <div class="turn-indicator" id="turn-top"></div>
+                    </div>
+                    <div class="hand-area" id="hand-top"></div>
+                    <div class="melds-area" id="melds-top"></div>
+                </div>
+
+                <!-- 左侧玩家（上家） -->
+                <div class="player-area left" id="player-left">
+                    <div class="player-info">
+                        <div class="player-avatar"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#bot"></use></svg></div>
+                        <div class="player-name">电上</div>
+                        <div class="player-score">1000</div>
+                        <div class="turn-indicator" id="turn-left"></div>
+                    </div>
+                    <div class="hand-area" id="hand-left"></div>
+                    <div class="melds-area" id="melds-left"></div>
+                </div>
+
+                <!-- 右侧玩家（下家） -->
+                <div class="player-area right" id="player-right">
+                    <div class="player-info">
+                        <div class="player-avatar"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#bot"></use></svg></div>
+                        <div class="player-name">电下</div>
+                        <div class="player-score">1000</div>
+                        <div class="turn-indicator" id="turn-right"></div>
+                    </div>
+                    <div class="hand-area" id="hand-right"></div>
+                    <div class="melds-area" id="melds-right"></div>
+                </div>
+
+                <!-- 底部玩家（自己） -->
+                <div class="player-area bottom" id="player-bottom">
+                    <div class="player-info">
+                        <div class="player-avatar"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#user"></use></svg></div>
+                        <div class="player-name" id="self-name">玩家</div>
+                        <div class="player-score" id="self-score">1000</div>
+                        <div id="shanten-display" class="shanten-hud hidden">向听: <span id="shanten-value">-</span></div>
+                        <div class="turn-indicator active" id="turn-bottom"></div>
+                    </div>
+                    <div class="melds-area" id="melds-bottom"></div>
+                    <div class="hand-area" id="hand-bottom"></div>
+                </div>
+
+                <!-- 牌桌中心 -->
+                <div class="table-center">
+                    <div class="table-status-core" id="table-status-core" aria-label="牌局状态">
+                        <span class="table-wind-mark" id="table-wind-indicator">东</span>
+                        <span class="table-round-mark" id="table-round-info">1/4局</span>
+                    </div>
+                    <div class="discard-pile" id="discard-pile"></div>
+                    <div class="turn-guidance" id="turn-guidance" role="status" aria-live="polite">
+                        准备开局…
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="action-bar" id="action-bar" aria-hidden="true">
+                <button class="action-btn" id="btn-chi" disabled>
+                    <span class="action-label">吃</span>
+                </button>
+                <button class="action-btn" id="btn-peng" disabled>
+                    <span class="action-label">碰</span>
+                </button>
+                <button class="action-btn" id="btn-gang" disabled>
+                    <span class="action-label">杠</span>
+                </button>
+                <button class="action-btn highlight" id="btn-hu" disabled>
+                    <span class="action-label">胡</span>
+                </button>
+                <button class="action-btn secondary" id="btn-skip" disabled>
+                    <span class="action-label">过</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 游戏内暂停菜单 -->
+        <div id="ingame-menu" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="ingame-title">
+            <div class="modal-overlay"></div>
+            <div class="modal-panel pause-panel">
+                <div class="modal-panel-header">
+                    <h3 id="ingame-title"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#menu"></use></svg>暂停</h3>
+                    <button class="modal-close" id="btn-resume" title="关闭菜单" aria-label="关闭菜单"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#close"></use></svg></button>
+                </div>
+                <div class="modal-panel-body pause-actions">
+                    <button class="pause-action-btn primary" id="btn-resume-main">
+                        <svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#play"></use></svg>
+                        <span>继续游戏</span>
+                    </button>
+                    <button class="pause-action-btn" id="btn-restart">
+                        <svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#rotate"></use></svg>
+                        <span>重新开始</span>
+                    </button>
+                    <button class="pause-action-btn" id="btn-ingame-settings">
+                        <svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#settings"></use></svg>
+                        <span>游戏设置</span>
+                    </button>
+                    <button class="pause-action-btn danger" id="btn-exit-game">
+                        <svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#home"></use></svg>
+                        <span>退出到主菜单</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 结算页 -->
+        <div id="game-result" class="screen">
+            <div class="result-bg"></div>
+            <div class="result-content">
+                <div class="result-header">
+                    <div class="result-icon" id="result-icon"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#trophy"></use></svg></div>
+                    <h2 class="result-title" id="result-title">胜利</h2>
+                    <p class="result-subtitle" id="result-subtitle">净胜 +200 分</p>
+                </div>
+                <div class="result-players" id="result-players"></div>
+                <div class="result-rewards" id="result-rewards"></div>
+                <div class="result-actions">
+                    <button class="result-btn primary" id="btn-result-restart">再来一局</button>
+                    <button class="result-btn secondary" id="btn-result-exit">返回主菜单</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 局域网联机大厅 -->
+        <div id="network-lobby" class="screen">
+            <div class="lobby-header">
+                <h2><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#network"></use></svg>局域网联机</h2>
+                <button class="back-btn icon-btn" id="network-lobby-back" data-screen="main-menu"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#back"></use></svg><span>返回</span></button>
+            </div>
+
+            <!-- 连接配置 -->
+            <div class="network-config" id="network-config">
+                <div class="config-row">
+                    <label for="signal-server">信令服务器</label>
+                    <input type="text" id="signal-server" value="http://localhost:8081" placeholder="http://IP:端口">
+                    <span class="conn-status offline" id="conn-status" role="status" aria-live="polite">未连接</span>
+                </div>
+                <div class="config-hint">
+                    💡 在同一局域网的设备上运行 <code>node server/signaling-server.js</code>，然后输入其 IP 地址
+                </div>
+            </div>
+
+            <div class="lobby-content" id="lobby-content">
+                <!-- 未进入房间时显示 -->
+                <div class="room-section" id="create-room-section">
+                    <h3>创建房间</h3>
+                    <div class="room-config">
+                        <label for="room-name">房间名称</label>
+                        <input type="text" id="room-name" value="我的麻将房" maxlength="12">
+                        <label for="room-mahjong-type">麻将种类</label>
+                        <select id="room-mahjong-type">
+                            <option value="guangdong">广东麻将</option>
+                            <option value="sichuan">四川麻将</option>
+                            <option value="shanghai">上海麻将</option>
+                            <option value="beijing">北京麻将</option>
+                            <option value="taiwan">台湾麻将</option>
+                        </select>
+                        <button class="primary-btn icon-btn" id="create-room"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#door"></use></svg>创建房间</button>
+                    </div>
+                </div>
+                <div class="room-section" id="join-room-section">
+                    <h3>加入房间</h3>
+                    <div class="room-list" id="room-list" role="status" aria-live="polite">
+                        <div class="empty-state">点击「刷新」搜索局域网房间</div>
+                    </div>
+                    <button class="secondary-btn icon-btn" id="refresh-rooms"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#refresh"></use></svg>刷新房间列表</button>
+                </div>
+            </div>
+
+            <!-- 已进入房间时显示 -->
+            <div class="in-room-panel hidden" id="in-room-panel">
+                <div class="room-info-bar">
+                    <div class="room-code">
+                        <span>房间号:</span>
+                        <strong id="room-code-display">----</strong>
+                        <span class="room-code-hint">（其他玩家用此号码加入）</span>
+                    </div>
+                    <div class="room-status" id="room-status">等待玩家加入...</div>
+                </div>
+
+                <div class="player-list" id="lobby-player-list">
+                    <!-- 动态填充 -->
+                </div>
+
+                <div class="room-actions" id="room-actions">
+                    <button class="primary-btn icon-btn hidden" id="btn-start-network"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#gamepad"></use></svg>开始游戏</button>
+                    <button class="secondary-btn icon-btn" id="btn-leave-room"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#door"></use></svg>离开房间</button>
+                </div>
+            </div>
+
+            <!-- 网络错误提示 -->
+            <div class="network-error hidden" id="network-error" role="alert"></div>
+        </div>
+        
+        <!-- 自定义模式 -->
+        <div id="custom-mode" class="screen">
+            <div class="lobby-header">
+                <h2><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#tune"></use></svg>自定义模式</h2>
+                <button class="back-btn icon-btn" data-screen="main-menu"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#back"></use></svg><span>返回</span></button>
+            </div>
+            <div class="custom-content">
+                <div class="rule-section">
+                    <h3>选择麻将种类</h3>
+                    <div class="mahjong-types" id="mahjong-types"></div>
+                </div>
+                <div class="rule-section">
+                    <h3>规则设置</h3>
+                    <div class="rule-options" id="rule-options"></div>
+                </div>
+                <button class="primary-btn" id="start-custom">开始游戏</button>
+            </div>
+        </div>
+        
+        <!-- 回放列表 -->
+        <div id="replay-list" class="screen">
+            <div class="lobby-header">
+                <h2><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#film"></use></svg>牌局回放</h2>
+                <button class="back-btn icon-btn" data-screen="main-menu"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#back"></use></svg><span>返回</span></button>
+            </div>
+            <div class="replay-list" id="replay-container">
+                <div class="empty-state">暂无历史对局</div>
+            </div>
+        </div>
+
+        <!-- 回放播放器 -->
+        <div id="replay-player" class="screen">
+            <div class="replay-player-header">
+                <button class="back-btn icon-btn" id="replay-back-btn"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#back"></use></svg><span>返回列表</span></button>
+                <div class="replay-player-title">
+                    <span id="replay-type-name">国标麻将</span>
+                    <span class="replay-player-sub" id="replay-meta">第1/4局 · 东风圈</span>
+                </div>
+                <div class="replay-player-scores" id="replay-scores"></div>
+            </div>
+
+            <div class="replay-player-body">
+                <!-- 牌桌预览区 -->
+                <div class="replay-table-area">
+                    <div class="replay-table" id="replay-table">
+                        <div class="replay-center">
+                            <div class="replay-discard-pile" id="replay-discard-pile"></div>
+                            <div class="replay-deck-info">
+                                <span id="replay-deck-count">剩余: 84</span>
+                                <div class="wind-indicator" id="replay-wind">东</div>
+                                <span id="replay-round-info">1/4局</span>
+                            </div>
+                        </div>
+                        <!-- 4个玩家区域 -->
+                        <div class="replay-player-area top" id="replay-p-top">
+                            <div class="replay-player-info">
+                                <span class="replay-p-avatar">🀄</span>
+                                <span class="replay-p-name" id="replay-name-top">玩家</span>
+                                <span class="replay-p-score" id="replay-score-top">1000</span>
+                            </div>
+                            <div class="replay-hand" id="replay-hand-top"></div>
+                            <div class="replay-melds" id="replay-melds-top"></div>
+                        </div>
+                        <div class="replay-player-area left" id="replay-p-left">
+                            <div class="replay-player-info">
+                                <span class="replay-p-avatar">🀄</span>
+                                <span class="replay-p-name" id="replay-name-left">玩家</span>
+                                <span class="replay-p-score" id="replay-score-left">1000</span>
+                            </div>
+                            <div class="replay-hand" id="replay-hand-left"></div>
+                            <div class="replay-melds" id="replay-melds-left"></div>
+                        </div>
+                        <div class="replay-player-area right" id="replay-p-right">
+                            <div class="replay-player-info">
+                                <span class="replay-p-avatar">🀄</span>
+                                <span class="replay-p-name" id="replay-name-right">玩家</span>
+                                <span class="replay-p-score" id="replay-score-right">1000</span>
+                            </div>
+                            <div class="replay-hand" id="replay-hand-right"></div>
+                            <div class="replay-melds" id="replay-melds-right"></div>
+                        </div>
+                        <div class="replay-player-area bottom" id="replay-p-bottom">
+                            <div class="replay-player-info current" id="replay-info-bottom">
+                                <span class="replay-p-avatar">🀄</span>
+                                <span class="replay-p-name" id="replay-name-bottom">玩家</span>
+                                <span class="replay-p-score" id="replay-score-bottom">1000</span>
+                            </div>
+                            <div class="replay-hand" id="replay-hand-bottom"></div>
+                            <div class="replay-melds" id="replay-melds-bottom"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 棋谱时间轴 -->
+                <div class="replay-timeline-panel">
+                    <div class="replay-timeline-header">
+                        <span class="icon-label"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#scroll"></use></svg>棋谱</span>
+                        <span class="replay-step-counter" id="replay-step-counter">0 / 0</span>
+                    </div>
+                    <div class="replay-timeline" id="replay-timeline"></div>
+                    <div class="replay-action-detail" id="replay-action-detail">
+                        <span class="replay-action-text" id="replay-action-text">点击播放开始回放</span>
+                        <span class="replay-action-sub" id="replay-action-sub"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 播放控制栏 -->
+            <div class="replay-controls">
+                <div class="replay-progress-wrap">
+                    <input type="range" class="replay-progress" id="replay-progress" min="0" max="100" value="0" aria-label="回放进度">
+                </div>
+                <div class="replay-control-bar">
+                    <div class="replay-control-group">
+                        <button class="replay-ctrl-btn" id="replay-speed" title="速度" aria-label="回放速度，当前 1 倍">1×</button>
+                    </div>
+                    <div class="replay-control-group center">
+                        <button class="replay-ctrl-btn" id="replay-step-back" title="上一步" aria-label="上一步"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#step-back"></use></svg></button>
+                        <button class="replay-ctrl-btn primary" id="replay-play-pause" title="播放/暂停" aria-label="播放回放"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#play"></use></svg></button>
+                        <button class="replay-ctrl-btn" id="replay-step-forward" title="下一步" aria-label="下一步"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#step-forward"></use></svg></button>
+                    </div>
+                    <div class="replay-control-group">
+                        <button class="replay-ctrl-btn" id="replay-round-prev" title="上一局" aria-label="上一局"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#round-back"></use></svg></button>
+                        <span class="replay-round-label" id="replay-round-label">局 1</span>
+                        <button class="replay-ctrl-btn" id="replay-round-next" title="下一局" aria-label="下一局"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#round-forward"></use></svg></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 成就界面 -->
+        <div id="achievements" class="screen">
+            <div class="lobby-header">
+                <h2><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#trophy"></use></svg>成就</h2>
+                <button class="back-btn icon-btn" data-screen="main-menu"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#back"></use></svg><span>返回</span></button>
+            </div>
+            <div class="achievements-grid" id="achievements-grid"></div>
+        </div>
+
+        <!-- 战绩页 -->
+        <div id="stats-page" class="screen">
+            <div class="lobby-header">
+                <h2><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#chart"></use></svg>战绩中心</h2>
+                <button class="back-btn icon-btn" data-screen="main-menu"><svg class="ui-icon" aria-hidden="true"><use href="assets/ui/icons.svg#back"></use></svg><span>返回</span></button>
+            </div>
+            <div class="stats-page-content" id="stats-page-content"></div>
+        </div>
+        
+        <!-- 提示框 -->
+        <div id="toast-container"></div>
+        
+        <!-- 粒子特效层 -->
+        <div id="particle-container"></div>
+        
+        <!-- 胡牌彩虹光效层 -->
+        <div id="rainbow-overlay" class="rainbow-glow"></div>
+        
+        <!-- 视差背景 -->
+        <div class="parallax-bg"></div>
+    </div>
+    
+    <!-- 脚本加载 -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/core/tiles.js"></script>
+    <script src="js/core/rules.js"></script>
+    <script src="js/core/player.js"></script>
+    <script src="js/core/engine.js"></script>
+    <script src="js/ai/ai-utils.js"></script>
+    <script src="js/ai/ai-player.js"></script>
+    <script src="js/network/p2p.js"></script>
+    <script src="js/data/storage.js"></script>
+    <script src="js/data/stats.js"></script>
+    <script src="js/data/replay.js"></script>
+    <script src="js/audio/audio-manager.js"></script>
+    <script src="js/ui/components.js"></script>
+    <script src="js/app/event-bus.js"></script>
+    <script src="js/app/game-renderer.js"></script>
+    <script src="js/app/game-input.js"></script>
+    <script src="js/app/menu-ui.js"></script>
+    <script src="js/app/network-ui.js"></script>
+    <script src="js/app/settings-ui.js"></script>
+    <script src="js/app/game-result.js"></script>
+    <script src="js/app/event-bindings.js"></script>
+    <script src="js/app/engine-events.js"></script>
+    <script src="js/app/stats-ui.js"></script>
+    <script src="js/app/replay-ui.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>

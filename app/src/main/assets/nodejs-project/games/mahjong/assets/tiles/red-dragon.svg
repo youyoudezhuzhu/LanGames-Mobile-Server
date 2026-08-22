@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="万能麻将">
+  <rect width="128" height="128" rx="24" fill="#1a3a1a"/>
+  <rect x="18" y="12" width="92" height="104" rx="12" fill="#f8f3e8"/>
+  <rect x="24" y="18" width="80" height="92" rx="9" fill="none" stroke="#d4a843" stroke-width="4"/>
+  <text x="64" y="82" text-anchor="middle" font-size="58" font-family="serif" font-weight="700" fill="#b3261e">中</text>
+  <circle cx="64" cy="98" r="5" fill="#d4a843"/>
+</svg>

@@ -27,6 +27,13 @@
       "port": 4174,
       "engine": "websocket",
       "servedStaticDir": "games/doudizhu"
+    },
+    "mahjong": {
+      "id": "mahjong",
+      "name": "麻将",
+      "port": 4176,
+      "engine": "webrtc",
+      "servedStaticDir": "games/mahjong"
     }
   }
 }

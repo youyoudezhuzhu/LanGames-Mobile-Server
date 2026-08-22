@@ -1,0 +1,1252 @@
+/* ===== 游戏界面 ===== */
+#game-screen {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+}
+
+/* iOS安全区适配 */
+@supports (padding: max(0px)) {
+    #game-screen {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    .action-bar {
+        padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    }
+}
+
+.game-table {
+    flex: 1;
+    position: relative;
+    display: grid;
+    contain: layout;
+    grid-template-areas:
+        ". top ."
+        "left center right"
+        ". bottom .";
+    grid-template-columns: 110px 1fr 110px;
+    grid-template-rows: 130px 1fr 220px;
+    gap: 6px;
+    padding: 10px;
+    overflow: hidden;
+    transition: font-size 0.3s ease;
+}
+
+/* 三人模式：移除对家，扩大中心区域 */
+.game-table.three-player {
+    grid-template-areas:
+        "left center right"
+        ". bottom .";
+    grid-template-columns: 90px 1fr 90px;
+    grid-template-rows: 1fr 180px;
+}
+
+.game-table.three-player .player-area.top {
+    display: none !important;
+}
+
+.game-table.three-player .player-area.left {
+    grid-area: left;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-table.three-player .player-area.right {
+    grid-area: right;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-table.three-player .player-area.left .hand-area,
+.game-table.three-player .player-area.right .hand-area {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.game-table.three-player .player-area.left .melds-area,
+.game-table.three-player .player-area.right .melds-area {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 玩家区域 */
+.player-area {
+    display: flex;
+    align-items: center;
+    position: relative;
+    contain: layout;
+    transition: var(--transition);
+}
+
+.player-area.top {
+    grid-area: top;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.player-area.left {
+    grid-area: left;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.player-area.right {
+    grid-area: right;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+.player-area.bottom {
+    grid-area: bottom;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    transition: var(--transition-fast);
+    border: 1px solid transparent;
+}
+
+.player-avatar {
+    font-size: 1.5rem;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+    transition: var(--transition-fast);
+}
+
+.player-name {
+    color: var(--text-secondary);
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.player-score {
+    color: var(--accent-gold);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+/* 当前回合高亮 */
+.player-area.current-turn .player-info {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 2px rgba(212, 168, 67, 0.3), 0 0 15px rgba(212, 168, 67, 0.15);
+    animation: turnPulse 2s ease-in-out infinite;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.player-area.current-turn .player-avatar {
+    animation: avatarBounce 1s ease-in-out infinite;
+}
+
+@keyframes turnPulse {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(212, 168, 67, 0.3), 0 0 15px rgba(212, 168, 67, 0.15); }
+    50% { box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.5), 0 0 25px rgba(212, 168, 67, 0.25); }
+}
+
+@keyframes avatarBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* 手牌区域 */
+.hand-area {
+    display: flex;
+    gap: 2px;
+    padding: 4px;
+    transition: var(--transition);
+}
+
+.player-area.top .hand-area {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.player-area.left .hand-area {
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.player-area.right .hand-area {
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.player-area.bottom .hand-area {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 8px;
+    max-width: 100%;
+    width: 100%;
+}
+
+.player-area.bottom .hand-area::-webkit-scrollbar {
+    display: none;
+}
+
+.shanten-hud {
+    position: absolute;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--hud-bg);
+    border: 1px solid var(--hud-border);
+    border-radius: var(--border-radius);
+    padding: 4px 12px;
+    font-size: 0.85rem;
+    color: var(--accent-gold);
+    z-index: 10;
+    pointer-events: none;
+}
+.shanten-hud.hidden { display: none; }
+
+/* ===== 真实大号牌面系统 ===== */
+
+/* 麻将牌基础 - 高对比度深色主题 */
+.mahjong-tile {
+    width: 64px;
+    height: 88px;
+    will-change: transform;
+    background: linear-gradient(
+        180deg,
+        #2d2d3d 0%,
+        #252535 35%,
+        #1e1e2e 65%,
+        #181828 100%
+    );
+    border: 2px solid #4a4a5a;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+        transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        filter 0.2s ease;
+    user-select: none;
+    position: relative;
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    flex-shrink: 0;
+    color: #ffffff;
+}
+
+/* 牌面文字容器 */
+.mahjong-tile .tile-face {
+    font-size: 2.4rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+    z-index: 2;
+    pointer-events: none;
+    text-shadow: 0 0 8px rgba(255,255,255,0.15), 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 牌面装饰线（高对比度版本） */
+.mahjong-tile .tile-deco {
+    position: absolute;
+    left: 8%;
+    width: 84%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.12),
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.12),
+        transparent
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+.mahjong-tile .tile-deco-top {
+    top: 6px;
+}
+
+.mahjong-tile .tile-deco-bottom {
+    bottom: 6px;
+}
+
+/* 牌面底部微阴影 */
+.mahjong-tile::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 4%;
+    width: 92%;
+    height: 35%;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.04));
+    border-radius: 0 0 5px 5px;
+    pointer-events: none;
+}
+
+/* 花色色调 - 高对比度深色主题，每花色鲜明区分 */
+.mahjong-tile.suit-wan {
+    background: linear-gradient(180deg, #3d1f1f 0%, #2d1515 35%, #251010 65%, #1e0c0c 100%);
+    border-color: #ff4444;
+    color: #ff6b6b;
+}
+
+.mahjong-tile.suit-tong {
+    background: linear-gradient(180deg, #1f3d1f 0%, #152d15 35%, #102510 65%, #0c1e0c 100%);
+    border-color: #44ff44;
+    color: #6bff6b;
+}
+
+.mahjong-tile.suit-tiao {
+    background: linear-gradient(180deg, #1f1f3d 0%, #15152d 35%, #101025 65%, #0c0c1e 100%);
+    border-color: #4488ff;
+    color: #6ba3ff;
+}
+
+.mahjong-tile.suit-feng {
+    background: linear-gradient(180deg, #2d1f3d 0%, #25152d 35%, #1e1025 65%, #150c1e 100%);
+    border-color: #bb66ff;
+    color: #d19aff;
+}
+
+.mahjong-tile.suit-jian {
+    background: linear-gradient(180deg, #3d2d1f 0%, #2d2515 35%, #251e10 65%, #1e180c 100%);
+    border-color: #ffcc44;
+    color: #ffe066;
+}
+
+.mahjong-tile.suit-hua {
+    background: linear-gradient(180deg, #3d1f2d 0%, #2d1525 35%, #25101e 65%, #1e0c18 100%);
+    border-color: #ff66aa;
+    color: #ff99cc;
+}
+
+/* 悬停效果 - 使用当前花色高亮（仅在支持精细指针的设备上生效） */
+@media (hover: hover) and (pointer: fine) {
+    .mahjong-tile:hover {
+        transform: translateY(-8px) scale(1.06) rotateX(-3deg);
+        box-shadow:
+            0 10px 24px rgba(0, 0, 0, 0.4),
+            0 0 0 2px currentColor,
+            0 0 20px currentColor;
+        z-index: 10;
+        filter: brightness(1.2);
+    }
+}
+
+/* 触摸设备：点击反馈 */
+.mahjong-tile:active {
+    transform: translateY(-4px) scale(1.03);
+    filter: brightness(1.15);
+}
+
+/* 选中效果 - 使用当前花色发光 */
+.mahjong-tile.selected {
+    transform: translateY(-16px) scale(1.1) rotateX(-5deg);
+    box-shadow:
+        0 0 0 3px currentColor,
+        0 0 30px currentColor,
+        0 12px 28px rgba(0, 0, 0, 0.4);
+    z-index: 20;
+    animation: selectedGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes selectedGlow {
+    0%, 100% { box-shadow: 0 0 0 3px currentColor, 0 12px 28px rgba(0, 0, 0, 0.4); }
+    50% { box-shadow: 0 0 0 3px currentColor, 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 25px currentColor; }
+}
+
+/* 禁用状态（非玩家回合时） */
+.mahjong-tile.disabled {
+    pointer-events: none;
+    opacity: 0.35;
+    filter: grayscale(0.6) brightness(0.5);
+    cursor: not-allowed;
+}
+
+/* ===== 背面牌 ===== */
+.mahjong-tile.back {
+    background: linear-gradient(180deg, #1a5a9a 0%, #154a80 50%, #0f3a68 100%);
+    border-color: #2a70b8;
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    cursor: default;
+    color: transparent;
+}
+
+.mahjong-tile.back::after {
+    display: none;
+}
+
+.mahjong-tile.back .tile-deco,
+.mahjong-tile.back .tile-face {
+    display: none;
+}
+
+/* 背面牌纹理图案 - 增强对比度 */
+.mahjong-tile.back::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 3px,
+            rgba(255,255,255,0.1) 3px,
+            rgba(255,255,255,0.1) 6px
+        );
+    border-radius: 5px;
+    pointer-events: none;
+}
+
+/* 左侧/右侧玩家牌（竖向排列的小牌） */
+.player-area.left .mahjong-tile,
+.player-area.right .mahjong-tile {
+    width: 44px;
+    height: 60px;
+}
+
+.player-area.left .mahjong-tile .tile-face,
+.player-area.right .mahjong-tile .tile-face {
+    font-size: 1.7rem;
+}
+
+.player-area.left .mahjong-tile.back,
+.player-area.right .mahjong-tile.back {
+    width: 38px;
+    height: 52px;
+}
+
+/* 顶部玩家牌 */
+.player-area.top .mahjong-tile {
+    width: 44px;
+    height: 60px;
+}
+
+.player-area.top .mahjong-tile .tile-face {
+    font-size: 1.7rem;
+}
+
+/* ===== 小号牌（副露、弃牌） ===== */
+.mahjong-tile.tile-small {
+    width: 44px;
+    height: 60px;
+}
+
+.mahjong-tile.tile-small .tile-face {
+    font-size: 1.8rem;
+}
+
+/* ===== 摸牌/打牌动画 ===== */
+.mahjong-tile.tile-drawn {
+    animation: tileDrawn3D calc(0.5s * var(--anim-speed, 1)) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes tileDrawn3D {
+    0% {
+        transform: rotateY(-180deg) scale(0.3) translateZ(-150px);
+        opacity: 0;
+    }
+    50% {
+        transform: rotateY(-20deg) scale(1.15) translateZ(30px);
+        opacity: 1;
+    }
+    75% {
+        transform: rotateY(5deg) scale(0.97) translateZ(10px);
+    }
+    100% {
+        transform: rotateY(0deg) scale(1) translateZ(0);
+        opacity: 1;
+    }
+}
+
+.mahjong-tile.tile-discarded {
+    animation: tileDiscard3D calc(0.5s * var(--anim-speed, 1)) cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes tileDiscard3D {
+    0% {
+        transform: translateZ(50px) scale(1.3) rotateY(0deg);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateZ(0) scale(1.1) rotateY(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateZ(0) scale(1) rotateY(180deg);
+        opacity: 1;
+    }
+}
+
+/* 副露区域 */
+.melds-area {
+    display: flex;
+    gap: 5px;
+    padding: 3px;
+    min-height: 38px;
+    flex-wrap: wrap;
+}
+
+.player-area.top .melds-area {
+    flex-direction: row;
+    justify-content: center;
+}
+
+.player-area.left .melds-area {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.player-area.right .melds-area {
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.player-area.bottom .melds-area {
+    flex-direction: row;
+    justify-content: center;
+}
+
+.meld-group {
+    display: flex;
+    gap: 2px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 3px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    animation: meldAppear calc(0.3s * var(--anim-speed, 1)) ease;
+}
+
+@keyframes meldAppear {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.meld-group .mahjong-tile {
+    width: 44px;
+    height: 60px;
+}
+
+.meld-group .mahjong-tile .tile-face {
+    font-size: 1.8rem;
+}
+
+/* 牌桌中心 */
+.table-center {
+    grid-area: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.discard-pile {
+    display: flex;
+    flex-wrap: wrap;
+    contain: layout;
+    gap: 4px;
+    justify-content: center;
+    align-content: flex-start;
+    max-width: 100%;
+    max-height: 75%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px;
+}
+
+.discard-pile::-webkit-scrollbar {
+    width: 3px;
+}
+.discard-pile::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+}
+
+.discard-pile .mahjong-tile {
+    width: 44px;
+    height: 60px;
+    cursor: default;
+    transition: transform 0.2s ease;
+}
+
+.discard-pile .mahjong-tile .tile-face {
+    font-size: 1.8rem;
+}
+
+.discard-pile .mahjong-tile:hover {
+    transform: scale(1.12);
+    z-index: 5;
+}
+
+.discard-pile .mahjong-tile:last-child {
+    box-shadow: 0 0 0 2px var(--accent-gold), 0 2px 8px rgba(0, 0, 0, 0.3);
+    animation:
+        latestDiscardEntry 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+        latestDiscardGlow 2s ease-in-out 0.5s infinite;
+}
+
+@keyframes latestDiscardEntry {
+    0% { transform: scale(1.3); opacity: 0.6; }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.wind-indicator {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+    color: #2a1a00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 6px auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.round-info {
+    font-weight: 500;
+}
+
+/* 操作栏 */
+.action-bar {
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--bg-panel);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+    border: 1px solid rgba(212, 168, 67, 0.15);
+    backdrop-filter: blur(10px);
+    animation: actionBarIn calc(0.3s * var(--anim-speed, 1)) ease;
+}
+
+@keyframes actionBarIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.action-btn {
+    padding: 12px 22px;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    min-width: 64px;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn:not(:disabled) {
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+    color: #2a1a00;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.action-btn:not(:disabled):hover {
+    background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 4px 16px rgba(212, 168, 67, 0.35);
+}
+
+.action-btn:not(:disabled):active {
+    transform: scale(1.02) translateY(0);
+}
+
+.action-btn:disabled {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.action-btn.secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+}
+
+.action-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+}
+
+/* 游戏控制栏 */
+.game-controls {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: var(--bg-secondary);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 50;
+}
+
+.control-btn {
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-size: 0.85rem;
+}
+
+.control-btn:hover {
+    background: var(--accent-gold);
+    color: #2a1a00;
+    border-color: var(--accent-gold);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(212, 168, 67, 0.25);
+}
+
+/* ===== 子界面通用 ===== */
+.lobby-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lobby-header h2 {
+    color: var(--accent-gold);
+    font-size: 1.5rem;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.lobby-content,
+.custom-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.room-section {
+    background: var(--bg-panel);
+    border-radius: var(--border-radius);
+    padding: 18px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    transition: var(--transition-fast);
+}
+
+.room-section:hover {
+    border-color: rgba(212, 168, 67, 0.1);
+}
+
+.room-section h3 {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+}
+
+.room-config {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.room-config label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.room-config input,
+.room-config select {
+    padding: 12px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    outline: none;
+    transition: var(--transition-fast);
+}
+
+.room-config input:focus,
+.room-config select:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 2px rgba(212, 168, 67, 0.15);
+}
+
+.room-list {
+    min-height: 120px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    padding: 10px;
+}
+
+.room-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    border: 1px solid transparent;
+}
+
+.room-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(212, 168, 67, 0.15);
+    transform: translateX(4px);
+}
+
+.room-item-info span {
+    display: block;
+}
+
+.room-item-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.room-item-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.room-item-join {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+    border: none;
+    border-radius: var(--border-radius-sm);
+    color: #2a1a00;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: var(--transition-fast);
+}
+
+.room-item-join:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(212, 168, 67, 0.3);
+}
+
+/* 自定义模式 */
+.rule-section {
+    background: var(--bg-panel);
+    border-radius: var(--border-radius);
+    padding: 18px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.rule-section h3 {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+}
+
+.mahjong-types {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.mahjong-type-card {
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-align: center;
+    border: 2px solid transparent;
+}
+
+.mahjong-type-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.mahjong-type-card.selected {
+    border-color: var(--accent-gold);
+    background: rgba(212, 168, 67, 0.1);
+    box-shadow: 0 0 15px rgba(212, 168, 67, 0.15);
+}
+
+.mahjong-type-card .type-icon {
+    font-size: 2.2rem;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+.mahjong-type-card .type-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.mahjong-type-card .type-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+
+.rule-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rule-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-fast);
+}
+
+.rule-option:hover {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.rule-option label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* 回放列表 */
+.replay-list {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.replay-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-panel);
+    border-radius: var(--border-radius);
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.replay-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(212, 168, 67, 0.15);
+    transform: translateX(6px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.replay-info span {
+    display: block;
+}
+
+.replay-title {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.replay-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+
+.replay-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.replay-btn {
+    padding: 8px 14px;
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+    border: none;
+    border-radius: var(--border-radius-sm);
+    color: #2a1a00;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: var(--transition-fast);
+}
+
+.replay-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(212, 168, 67, 0.3);
+}
+
+/* 成就 */
+.achievements-grid {
+    max-width: 600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.achievement-card {
+    padding: 16px;
+    background: var(--bg-panel);
+    border-radius: var(--border-radius);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    transition: var(--transition-fast);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.achievement-card.unlocked {
+    border-color: rgba(212, 168, 67, 0.3);
+    background: rgba(212, 168, 67, 0.05);
+}
+
+.achievement-card.locked {
+    opacity: 0.5;
+}
+
+.achievement-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.achievement-icon {
+    font-size: 2.2rem;
+    width: 52px;
+    text-align: center;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+.achievement-info {
+    flex: 1;
+}
+
+.achievement-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+}
+
+.achievement-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+
+.achievement-progress {
+    margin-top: 8px;
+    height: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.achievement-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-gold-dark), var(--accent-gold));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px rgba(212, 168, 67, 0.3);
+}
+
+/* 倒计时样式已移至 ui-overhaul.css 中的 .turn-timer-display */
+/* 吃碰杠胡弹出文字 */
+.action-effect {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--accent-gold);
+    text-shadow: 0 0 30px rgba(212, 168, 67, 0.6), 0 4px 8px rgba(0, 0, 0, 0.5);
+    animation: actionPop calc(0.9s * var(--anim-speed, 1)) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    z-index: 500;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+@keyframes actionPop {
+    0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+    40% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    70% { transform: translate(-50%, -50%) scale(0.95); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
+}
+
+/* 粒子效果容器 */
+#particle-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 400;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--accent-gold);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+}
+
+@keyframes particleBurst {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* 胜利彩带 */
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--accent-gold);
+    animation: confettiFall 3s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes confettiFall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* 响应式游戏界面 */
+@media (max-width: 560px) {
+    .game-table {
+        grid-template-columns: 70px 1fr 70px;
+        grid-template-rows: 100px 1fr 170px;
+        gap: 3px;
+        padding: 6px;
+    }
+    .mahjong-tile {
+        width: 48px;
+        height: 66px;
+    }
+    .mahjong-tile .tile-face {
+        font-size: 2rem;
+    }
+    .player-area.left .mahjong-tile,
+    .player-area.right .mahjong-tile,
+    .player-area.top .mahjong-tile {
+        width: 34px;
+        height: 48px;
+    }
+    .player-area.left .mahjong-tile .tile-face,
+    .player-area.right .mahjong-tile .tile-face,
+    .player-area.top .mahjong-tile .tile-face {
+        font-size: 1.4rem;
+    }
+    .mahjong-tile.tile-small {
+        width: 34px;
+        height: 48px;
+    }
+    .mahjong-tile.tile-small .tile-face {
+        font-size: 1.4rem;
+    }
+    .action-btn {
+        padding: 10px 16px;
+        font-size: 0.95rem;
+        min-width: 54px;
+    }
+    .action-bar {
+        gap: 6px;
+        padding: 10px 12px;
+    }
+    .player-info {
+        padding: 4px 6px;
+        font-size: 0.7rem;
+    }
+    .player-name {
+        max-width: 45px;
+    }
+    .achievements-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 768px) {
+    .game-table {
+        grid-template-columns: 150px 1fr 150px;
+        grid-template-rows: 150px 1fr 240px;
+    }
+    .mahjong-tile {
+        width: 72px;
+        height: 96px;
+    }
+    .mahjong-tile .tile-face {
+        font-size: 2.8rem;
+    }
+    .player-area.left .mahjong-tile,
+    .player-area.right .mahjong-tile,
+    .player-area.top .mahjong-tile {
+        width: 50px;
+        height: 68px;
+    }
+    .player-area.left .mahjong-tile .tile-face,
+    .player-area.right .mahjong-tile .tile-face,
+    .player-area.top .mahjong-tile .tile-face {
+        font-size: 1.9rem;
+    }
+    .mahjong-tile.tile-small {
+        width: 50px;
+        height: 68px;
+    }
+    .mahjong-tile.tile-small .tile-face {
+        font-size: 1.9rem;
+    }
+}
