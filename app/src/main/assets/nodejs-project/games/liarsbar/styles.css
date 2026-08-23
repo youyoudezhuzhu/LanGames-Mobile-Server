@@ -584,18 +584,19 @@ input[type="range"]:disabled { opacity:.35; cursor:not-allowed; }
   .game-menu-button:hover { border-color: var(--gold); color: #fff; }
   .game-menu-button .menu-label { display: inline; }
   #header-actions {
-    position: absolute; top: calc(100% + 6px); left: 10px; z-index: 60;
-    display: none; flex-direction: column; align-items: stretch; gap: 6px; padding: 8px;
-    min-width: 156px; background: #15100cf2; border: 1px solid rgba(213,169,101,.35);
-    border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.55);
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 60;
+    display: none; flex-direction: row; align-items: stretch; gap: 6px; padding: 8px 10px;
+    background: #15100cf2; border-top: 1px solid rgba(213,169,101,.35);
+    box-shadow: 0 12px 32px rgba(0,0,0,.55);
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
   }
   #header-actions.open { display: flex; }
   #header-actions .icon-btn {
-    display: flex; align-items: center; justify-content: flex-start; gap: 10px;
-    width: auto; height: 42px; padding: 0 12px; border-radius: 8px;
+    flex: 0 0 auto; width: auto; height: 46px; padding: 0 14px; border-radius: 10px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
     border-color: transparent; background: transparent;
   }
   #header-actions .icon-btn:hover { background: #231a14; border-color: transparent; transform: none; }
-  #header-actions .menu-label { display: inline; font-size: 13px; }
+  #header-actions .menu-label { display: inline; font-size: 11px; }
 }
 

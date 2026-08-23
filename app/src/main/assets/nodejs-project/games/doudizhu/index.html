@@ -12,6 +12,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <script type="module" crossorigin src="./assets/main-DZN4uAr-.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/main-DSkBKtHW.css">
+  <link rel="stylesheet" href="./guandan-style.css">
 </head>
 <body data-theme="green">
     <svg class="svg-sprite" aria-hidden="true" focusable="false">
@@ -35,6 +36,7 @@
         <symbol id="icon-volume-off" viewBox="0 0 24 24"><path d="m11 5-5 4H3v6h3l5 4V5ZM16 10l5 5M21 10l-5 5"/></symbol>
         <symbol id="icon-fullscreen" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></symbol>
         <symbol id="icon-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
     </svg>
     <!-- 菜单界面 -->
     <div id="menu-screen" class="screen">
@@ -1151,12 +1153,18 @@
     <!-- 游戏主界面 -->
     <div id="game-screen" class="screen hidden">
         <div class="game-header">
-            <button id="btn-back-menu" class="btn-small">← 返回</button>
+            <button id="gameMenuBtn" class="game-menu-button" type="button" aria-label="菜单" title="菜单" aria-expanded="false">
+                <svg class="ui-icon" aria-hidden="true"><use href="#icon-menu"></use></svg>
+                <span class="menu-label">菜单</span>
+            </button>
             <span id="mode-display">人机对战</span>
-            <div class="header-controls">
-                <button id="btn-pause" class="btn-small" title="暂停" aria-label="暂停游戏"><svg class="ui-icon" aria-hidden="true"><use href="#icon-pause"></use></svg></button>
-                <button id="btn-sound-toggle" class="btn-small" title="关闭音效" aria-label="关闭音效" aria-pressed="true"><svg class="ui-icon" aria-hidden="true"><use href="#icon-volume"></use></svg></button>
-                <button id="btn-fullscreen" class="btn-small" title="全屏" aria-label="切换全屏"><svg class="ui-icon" aria-hidden="true"><use href="#icon-fullscreen"></use></svg></button>
+            <div id="header-actions" class="header-actions" aria-label="顶部菜单">
+                <div class="header-controls">
+                    <button id="btn-back-menu" class="btn-small">← 返回</button>
+                    <button id="btn-pause" class="btn-small" title="暂停" aria-label="暂停游戏"><svg class="ui-icon" aria-hidden="true"><use href="#icon-pause"></use></svg></button>
+                    <button id="btn-sound-toggle" class="btn-small" title="关闭音效" aria-label="关闭音效" aria-pressed="true"><svg class="ui-icon" aria-hidden="true"><use href="#icon-volume"></use></svg></button>
+                    <button id="btn-fullscreen" class="btn-small" title="全屏" aria-label="切换全屏"><svg class="ui-icon" aria-hidden="true"><use href="#icon-fullscreen"></use></svg></button>
+                </div>
             </div>
         </div>
         
@@ -2106,5 +2114,38 @@
         </div>
     </div>
 
+<script>
+(function () {
+  /* ── 悬浮菜单展开（掼蛋式）── */
+  var menuBtn = document.getElementById("gameMenuBtn");
+  var actions = document.getElementById("header-actions");
+  function closeMenu() {
+    if (actions) actions.classList.remove("open");
+    if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+  }
+  if (menuBtn && actions) {
+    menuBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var open = actions.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", function (e) {
+      if (e.target.closest("#gameMenuBtn") || e.target.closest("#header-actions")) return;
+      closeMenu();
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
+  }
+  /* ── 首次点击尝试进入全屏（浏览器需用户手势）── */
+  var fsEl = function () { return document.fullscreenElement || document.webkitFullscreenElement || null; };
+  document.addEventListener("pointerdown", function fh() {
+    if (!fsEl()) {
+      var el = document.documentElement;
+      var enter = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (enter) { try { enter.call(el); } catch (_) {} }
+    }
+    document.removeEventListener("pointerdown", fh);
+  }, { passive: true });
+})();
+</script>
 </body>
 </html>

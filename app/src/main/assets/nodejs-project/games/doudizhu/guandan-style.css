@@ -1,0 +1,167 @@
+/* ============================================================
+   Doudizhu · 掼蛋风格皮肤
+   保留斗地主玩法/3人布局，仅把配色、牌面、牌桌、玩家区、按钮、顶栏
+   换成掼蛋（Guandan）的视觉语言。深度墨绿牌桌 + 金色点缀 + 深色底。
+   ============================================================ */
+
+/* 顶栏：掼蛋式悬浮菜单（左上角按钮，点开向下展开下拉）+ 品牌 + 模式 + 全屏 */
+#game-screen .game-header {
+  position: relative;
+  z-index: 60;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 16px;
+  background: linear-gradient(180deg, rgba(1,13,11,.96), rgba(1,13,11,.82));
+  border-bottom: 1px solid rgba(216,182,106,.16);
+  backdrop-filter: blur(14px);
+}
+#game-screen .game-header #mode-display {
+  color: var(--ddz-gold, #d8b66a);
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+#game-screen .game-header .header-controls { margin-left: auto; }
+
+/* 悬浮菜单按钮（左上角） */
+#game-screen .game-menu-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 15px 0 12px;
+  border: 1px solid rgba(216,182,106,.42);
+  border-radius: 20px;
+  background: rgba(2,23,21,.72);
+  color: #f7f4e8;
+  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 2px;
+  -webkit-tap-highlight-color: transparent;
+}
+#game-screen .game-menu-button:hover { border-color: #f1d58e; color: #fff; }
+#game-screen .game-menu-button .menu-label { display: inline; }
+
+/* 下拉面板（点菜单展开） */
+#game-screen .header-actions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 61;
+  display: none;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 6px;
+  padding: 8px 10px;
+  background: rgba(2,23,21,.96);
+  border-top: 1px solid rgba(216,182,106,.32);
+  box-shadow: 0 12px 32px rgba(0,0,0,.55);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#game-screen .header-actions.open { display: flex; }
+#game-screen .header-actions .header-controls {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  margin: 0 auto;
+}
+#game-screen .header-actions .btn-small {
+  flex: 0 0 auto;
+  height: 44px;
+  width: auto;
+  padding: 0 14px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #e2cfb3;
+  border-color: transparent;
+  background: rgba(255,255,255,.045);
+  font-size: 13px;
+}
+#game-screen .header-actions .btn-small:hover { background: rgba(255,255,255,.1); }
+
+/* ===== 全局牌桌底色（掼蛋：深墨绿 felt + 深色径向） ===== */
+#game-screen {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(43,105,88,.3), transparent 34%),
+    linear-gradient(145deg, #071815, #020a09 72%) !important;
+}
+#ddz-table {
+  background: radial-gradient(ellipse at 50% 46%, #0b4439 0%, #062e29 62%, #041f1b 100%) !important;
+  border: 1px solid rgba(216,182,106,.18);
+  box-shadow: 0 30px 80px rgba(0,0,0,.5), inset 0 0 120px rgba(0,0,0,.35);
+  border-radius: 48% 52% 50% 50% !important;
+}
+#ddz-table .table-aura { opacity: .5; filter: saturate(.9); }
+
+/* ===== 牌面（掼蛋：白底、红/黑花色、圆角、柔和阴影） ===== */
+#ddz-table .card {
+  background: #f5f0df !important;
+  border: 1px solid #ffffff !important;
+  border-radius: 9px !important;
+  box-shadow: 0 6px 14px rgba(0,0,0,.28) !important;
+  color: #1b1d19 !important;
+}
+#ddz-table .card .card-suit-red { color: #a52c2a !important; }
+#ddz-table .card .card-suit-black { color: #1b1d19 !important; }
+#ddz-table .card-back {
+  background: linear-gradient(145deg, #134a3e, #0a2f28) !important;
+  border: 1px solid rgba(216,182,106,.35) !important;
+  border-radius: 9px !important;
+}
+#ddz-table .card-back-inner { border-color: rgba(216,182,106,.28) !important; }
+
+/* ===== 玩家区（掼蛋：彩色渐变头像 + 名称 + 张数 + 回合提示） ===== */
+#ddz-table .player-avatar {
+  box-shadow: 0 8px 22px rgba(0,0,0,.35) !important;
+  border: 2px solid rgba(255,255,255,.28) !important;
+}
+#ddz-table .player-name { color: #f7f4e8 !important; }
+#ddz-table .player-role { color: rgba(236,245,239,.62) !important; }
+#ddz-table .card-count { color: rgba(236,245,239,.62) !important; }
+#ddz-table .player-badge {
+  background: linear-gradient(145deg, #f1d58e, #a77933) !important;
+  color: #193629 !important;
+}
+
+/* ===== 出牌区 / 叫分按钮（掼蛋：圆角 + 金色/绿强调） ===== */
+#ddz-table #call-controls button,
+#ddz-table #play-controls button {
+  border-radius: 12px !important;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+#call-controls button:not(.btn-auto),
+#play-controls button:not(.btn-auto) {
+  color: #f7f4e8;
+  border: 1px solid rgba(216,182,106,.34);
+  background: linear-gradient(135deg, rgba(216,182,106,.18), rgba(12,61,51,.84));
+}
+#call-controls button:not(.btn-auto):hover,
+#play-controls button:not(.btn-auto):hover { border-color: #f1d58e; filter: brightness(1.1); }
+#ddz-table #controls-area .btn-auto {
+  border-radius: 12px !important;
+  background: rgba(216,182,106,.16) !important;
+  border: 1px solid rgba(216,182,106,.3) !important;
+  color: #f1d58e !important;
+}
+
+/* ===== 记牌器/历史侧栏面板 ===== */
+#side-panels .btn-panel-toggle {
+  border-radius: 10px !important;
+  background: rgba(2,23,21,.72) !important;
+  border: 1px solid rgba(216,182,106,.22) !important;
+  color: #e2cfb3 !important;
+}
+#side-panels .side-panel {
+  background: rgba(2,23,21,.92) !important;
+  border: 1px solid rgba(216,182,106,.22) !important;
+  border-radius: 12px !important;
+  color: #e2cfb3;
+}
