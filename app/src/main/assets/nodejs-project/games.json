@@ -7,13 +7,6 @@
       "engine": "sse",
       "servedStaticDir": "games/guandan"
     },
-    "xiangqi": {
-      "id": "xiangqi",
-      "name": "中国象棋",
-      "port": 4177,
-      "engine": "static",
-      "servedStaticDir": "games/xiangqi"
-    },
     "liarsbar": {
       "id": "liarsbar",
       "name": "骗子酒馆",
@@ -34,13 +27,6 @@
       "port": 4176,
       "engine": "webrtc",
       "servedStaticDir": "games/mahjong"
-    },
-    "billiards": {
-      "id": "billiards",
-      "name": "3D 台球",
-      "port": 3001,
-      "engine": "websocket",
-      "servedStaticDir": "games/billiards"
     }
   }
 }

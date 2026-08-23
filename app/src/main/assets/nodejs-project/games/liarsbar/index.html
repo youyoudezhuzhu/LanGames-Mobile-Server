@@ -24,18 +24,26 @@
       <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
       <symbol id="icon-profile" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="9" r="2.5"/><path d="M8.5 16c.8-2 2-3 3.5-3s2.7 1 3.5 3M8 6h1m6 12h1"/></symbol>
       <symbol id="icon-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2-.7-.7-1.7.9-1.9-2.1-2.1-1.9.9-1.7-.7-.7-2h-3l-.7 2-1.7.7-1.9-.9-2.1 2.1.9 1.9-.7 1.7-2 .7v3l2 .7.7 1.7-.9 1.9 2.1 2.1 1.9-.9 1.7.7.7 2h3l.7-2 1.7-.7 1.9.9 2.1-2.1-.9-1.9.7-1.7 2-.7Z"/></symbol>
+      <symbol id="icon-fullscreen" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></symbol>
     </defs>
   </svg>
 
   <main id="game" class="game-shell" aria-label="骗子酒馆牌桌">
     <header class="topbar">
-      <button id="menuBtn" class="icon-btn" type="button" aria-label="打开游戏规则" aria-haspopup="dialog"><svg class="ui-icon" aria-hidden="true"><use href="#icon-menu"></use></svg></button>
+      <button id="gameMenuBtn" class="game-menu-button" type="button" aria-label="菜单" title="菜单" aria-expanded="false">
+        <svg class="ui-icon" aria-hidden="true"><use href="#icon-menu"></use></svg>
+        <span class="menu-label">菜单</span>
+      </button>
       <div class="brand"><span>LIAR'S</span><b>TABLE</b></div>
       <div id="modeBadge" class="mode-badge"><i></i><span>未入座</span></div>
       <div class="round-info"><span>第 <b id="roundNo">0</b> 局</span><i></i><span>桌面 <b id="pileCount">0</b></span></div>
-      <button id="profileBtn" class="icon-btn" type="button" aria-label="查看酒客档案" aria-haspopup="dialog"><svg class="ui-icon" aria-hidden="true"><use href="#icon-profile"></use></svg></button>
-      <button id="soundBtn" class="icon-btn" type="button" aria-label="关闭声音与环境音乐" aria-pressed="true"><svg class="ui-icon" aria-hidden="true"><use href="#icon-volume-on"></use></svg></button>
-      <button id="settingsBtn" class="icon-btn" type="button" aria-label="打开游戏设置" aria-haspopup="dialog"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg></button>
+      <nav id="header-actions" class="header-actions" aria-label="顶部菜单">
+        <button id="menuBtn" class="icon-btn" type="button" aria-label="打开游戏规则" aria-haspopup="dialog"><svg class="ui-icon" aria-hidden="true"><use href="#icon-menu"></use></svg><span class="menu-label">规则</span></button>
+        <button id="profileBtn" class="icon-btn" type="button" aria-label="查看酒客档案" aria-haspopup="dialog"><svg class="ui-icon" aria-hidden="true"><use href="#icon-profile"></use></svg><span class="menu-label">档案</span></button>
+        <button id="soundBtn" class="icon-btn" type="button" aria-label="关闭声音与环境音乐" aria-pressed="true"><svg class="ui-icon" aria-hidden="true"><use href="#icon-volume-on"></use></svg><span class="menu-label">声音</span></button>
+        <button id="settingsBtn" class="icon-btn" type="button" aria-label="打开游戏设置" aria-haspopup="dialog"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg><span class="menu-label">设置</span></button>
+        <button id="fullscreenBtn" class="icon-btn" type="button" aria-label="全屏" title="全屏"><svg class="ui-icon" aria-hidden="true"><use href="#icon-fullscreen"></use></svg><span class="menu-label">全屏</span></button>
+      </nav>
     </header>
 
     <section class="table-stage" aria-label="游戏牌桌">
@@ -349,6 +357,66 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script type="module" src="game.js"></script>
+  <script>
+    (function () {
+      /* ── 悬浮菜单展开 ── */
+      var menuBtn = document.getElementById("gameMenuBtn");
+      var actions = document.getElementById("header-actions");
+      function closeMenu() {
+        if (!actions) return;
+        actions.classList.remove("open");
+        if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+      }
+      if (menuBtn && actions) {
+        menuBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var open = actions.classList.toggle("open");
+          menuBtn.setAttribute("aria-expanded", String(open));
+        });
+        document.addEventListener("click", function (e) {
+          if (e.target.closest("#gameMenuBtn") || e.target.closest("#header-actions")) return;
+          closeMenu();
+        });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
+      }
+
+      /* ── 全屏 ── */
+      var fsBtn = document.getElementById("fullscreenBtn");
+      var fsEl = function () { return document.fullscreenElement || document.webkitFullscreenElement || null; };
+      var toggleFs = function () {
+        if (fsEl()) {
+          var exit = document.exitFullscreen || document.webkitExitFullscreen;
+          if (exit) exit.call(document);
+        } else {
+          var el = document.documentElement;
+          var enter = el.requestFullscreen || el.webkitRequestFullscreen;
+          if (enter) enter.call(el);
+        }
+      };
+      if (fsBtn) {
+        fsBtn.addEventListener("click", function (e) { e.stopPropagation(); toggleFs(); });
+        var syncFs = function () {
+          var on = !!fsEl();
+          fsBtn.classList.toggle("fs", on);
+          fsBtn.setAttribute("aria-pressed", String(on));
+        };
+        document.addEventListener("fullscreenchange", function () {
+          syncFs();
+          try { setTimeout(function () { window.dispatchEvent(new Event("resize")); }, 120); } catch (_) {}
+        });
+        document.addEventListener("webkitfullscreenchange", syncFs);
+        /* 首次点击尝试进入全屏（浏览器需用户手势） */
+        document.addEventListener("pointerdown", function fh() {
+          if (!fsEl()) {
+            var el = document.documentElement;
+            var enter = el.requestFullscreen || el.webkitRequestFullscreen;
+            if (enter) { try { enter.call(el); } catch (_) {} }
+          }
+          document.removeEventListener("pointerdown", fh);
+        }, { passive: true });
+      }
+    })();
+  </script>
 <script src="mobile-fit.js" defer></script>
 </body>
 </html>

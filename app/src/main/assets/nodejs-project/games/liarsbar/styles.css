@@ -568,3 +568,34 @@ input[type="range"]:disabled { opacity:.35; cursor:not-allowed; }
   .elimination-impact { animation:none !important; opacity:1; }
   .elimination-impact::before { animation:none !important; opacity:0; }
 }
+
+/* ── 顶栏悬浮菜单（掼蛋式：钮在左上、点开向下展开下拉）── */
+.game-menu-button { display: none; }
+#header-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+#header-actions .menu-label { display: none; }
+
+@media (max-width: 620px), (max-height: 740px) {
+  .game-menu-button {
+    display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 15px 0 12px;
+    border: 1px solid rgba(213,169,101,.45); border-radius: 20px;
+    background: #15100cd9; color: #e2cfb3; cursor: pointer; font-size: 13px; letter-spacing: 1px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .game-menu-button:hover { border-color: var(--gold); color: #fff; }
+  .game-menu-button .menu-label { display: inline; }
+  #header-actions {
+    position: absolute; top: calc(100% + 6px); left: 10px; z-index: 60;
+    display: none; flex-direction: column; align-items: stretch; gap: 6px; padding: 8px;
+    min-width: 156px; background: #15100cf2; border: 1px solid rgba(213,169,101,.35);
+    border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.55);
+  }
+  #header-actions.open { display: flex; }
+  #header-actions .icon-btn {
+    display: flex; align-items: center; justify-content: flex-start; gap: 10px;
+    width: auto; height: 42px; padding: 0 12px; border-radius: 8px;
+    border-color: transparent; background: transparent;
+  }
+  #header-actions .icon-btn:hover { background: #231a14; border-color: transparent; transform: none; }
+  #header-actions .menu-label { display: inline; font-size: 13px; }
+}
+

@@ -36,8 +36,6 @@ app/libnode/                   # libnode.so + 头文件（CI 下载，不入库�
 | 斗地主 | 4174 | WebSocket（零依赖） | ✅ 已接入 |
 | 骗子酒馆 | 4175 | WebSocket（零依赖） | ✅ 已接入 |
 | 麻将 | 4176 | WebRTC 信令 + 静态（零依赖） | ✅ 已接入 |
-| 中国象棋 | 4177 | WebRTC P2P / 静态 | ✅ 已接入 |
-| 3D 台球 | 3001 | WebSocket 中继（零依赖） | ✅ 已接入 |
 
 > 只有注册进 `games.json` 且目录就绪的游戏才会被 `host.js` 启动、才会显示在启动页。
 
